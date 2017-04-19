@@ -100,7 +100,16 @@ var NavigationBarRouteMapper = {
     );
   },
   RightButton(route, navigator, index, navState) {
-    return null;
+    var routeId = route.id;
+    if (routeId === 'ProductListPage') {
+      return <TouchableOpacity style={styles.navigationBarBackButton}
+                onPress={() => navigator.push({
+                  id: 'ContactPage',
+                  title: 'Contact'
+                })}>
+              <Text style={{fontSize: 28, marginRight: 20}}>🏠</Text>
+            </TouchableOpacity>;
+    }
   },
   Title(route, navigator, index, navState) {
     return (

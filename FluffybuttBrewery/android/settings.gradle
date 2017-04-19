@@ -1,3 +1,4 @@
 rootProject.name = 'FluffybuttBrewery'
 
-include ':app'
+include ':RNMail', ':app'
+project(':RNMail').projectDir = new File(rootProject.projectDir, '../node_modules/react-native-mail/android')

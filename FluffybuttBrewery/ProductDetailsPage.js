@@ -8,6 +8,8 @@ import {
   TouchableHighlight,
   Text
 } from 'react-native';
+import { getLabel } from 'Labels';
+import { launchMailAppWith } from 'MailHelper'
 
 var styles = StyleSheet.create({
   container: {
@@ -50,17 +52,17 @@ var styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: '#A2D6E1',
-    alignSelf: 'center'
+    textAlign: 'center'
   },
   button: {
-    height: 36,
     backgroundColor: '#568885',
     borderColor: '#568885',
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
     marginTop: 20,
-    margin: 20,
+    margin: 40,
+    padding: 5,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -74,35 +76,33 @@ class ProductDetailsPage extends Component {
 
   render() {
     var product = this.props.product;
+    var title = product.title
+    var img_url = product.img_url
     var details = product.details;
     var price = product.price;
+    const emailSubject = getLabel('pdp.contact.subject') + title
+    const emailRecipients = [getLabel('contact.recipient')]
+    const emailBody = getLabel('pdp.contact.body') + title
 
     return (
       <View style={styles.background}>
         <View style={styles.container}>
           <Image style={styles.image}
-              source={{uri: product.img_url}} />
+              source={{uri: img_url}} />
           <View style={styles.heading}>
-            <Text style={styles.title}>{product.title}</Text>
+            <Text style={styles.title}>{title}</Text>
             <Text style={styles.price}>{price}</Text>
             <View style={styles.separator}/>
           </View>
           <Text style={styles.description}>{details}</Text>
           <TouchableHighlight style={styles.button}
-            onPress={this.onContactPressed.bind(this)}
+            onPress={() => launchMailAppWith(emailSubject, emailRecipients, emailBody)}
             underlayColor='#79B5B3'>
-            <Text style={styles.buttonText}>Contact Brewery about this product</Text>
+            <Text style={styles.buttonText}>{getLabel('pdp.contact.button')}</Text>
           </TouchableHighlight>
         </View>
       </View>
     );
-  }
-
-  onContactPressed() {
-    this.props.navigator.push({
-      id: 'ContactPage',
-      title: 'Contact'
-    });
   }
 }
 

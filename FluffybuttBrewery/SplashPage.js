@@ -17,7 +17,7 @@ var config = {
   messagingSenderId: "809970246372"
 };
 firebase.initializeApp(config);
-var myFirebaseRef = firebase.database().ref();
+var myFirebaseRef = firebase.database().ref('content');
 
 // Colortheme: E0BE92, 9F6250, A2D6E1, 7CA6B4, 568885
 var styles = StyleSheet.create({

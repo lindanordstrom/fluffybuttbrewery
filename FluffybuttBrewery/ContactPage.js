@@ -8,13 +8,15 @@ import {
   TextInput,
   Text
 } from 'react-native';
+import { getLabel } from 'Labels';
+import { launchMailAppWith } from 'MailHelper'
 
 var styles = StyleSheet.create({
   container: {
-    marginTop: 65
-  },
-  heading: {
-    backgroundColor: '#F8F8F8',
+    marginTop: 65,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20
   },
   title: {
     fontSize: 25,
@@ -26,10 +28,8 @@ var styles = StyleSheet.create({
   },
   description: {
     fontSize: 18,
-    margin: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    color: '#568885'
+    color: '#568885',
+    fontWeight: 'bold'
   },
   buttonText: {
     fontSize: 18,
@@ -44,19 +44,19 @@ var styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 10,
     marginTop: 20,
-    margin: 20,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
   inputField: {
-    height: 300,
+    height: 200,
     fontSize: 18,
     borderWidth: 1,
-    borderColor: '#568885',
     borderRadius: 8,
-    marginLeft: 20,
-    marginRight: 20,
-    color: '#568885'
+    padding: 5,
+    marginTop: 5,
+    color: '#568885',
+    borderColor: '#E6E5ED',
+    backgroundColor: '#F8F8F9'
   },
   background: {
     backgroundColor: 'white',
@@ -64,22 +64,20 @@ var styles = StyleSheet.create({
   }
 });
 
-class ContactPage extends Component {
+var Mailer = require('NativeModules').RNMail;
 
+class ContactPage extends Component {
   render() {
+    const emailSubject = getLabel('contact.subject')
+    const emailRecipients = [getLabel('contact.recipient')]
     return (
       <View style={styles.background}>
         <View style={styles.container}>
-          <View style={styles.heading}>
-            <Text style={styles.title}>Contact Brewery</Text>
-          </View>
-          <Text style={styles.description}>Message:</Text>
-          <TextInput style={styles.inputField}
-            multiLine={true}
-            placeholder='Enter your message here'/>
+          <Text style={styles.description}>{getLabel('contact.details')}</Text>
           <TouchableHighlight style={styles.button}
+            onPress={() => launchMailAppWith(emailSubject, emailRecipients)}
             underlayColor='#79B5B3'>
-            <Text style={styles.buttonText}>Send</Text>
+            <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
         </View>
       </View>
