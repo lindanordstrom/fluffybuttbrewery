@@ -6,40 +6,40 @@ import {
   View,
   TouchableHighlight,
   TextInput,
-  Text
+  Text,
+  Image,
+  StatusBar
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { launchMailAppWith } from 'MailHelper'
+import { getColor, ColorKeys } from 'Colors';
+
+const MAIN_COLOR = getColor(ColorKeys.MAIN)
+const THIRD_COLOR = getColor(ColorKeys.THIRD)
+const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
+const BACKGROUND_COLOR_LIGHT = getColor(ColorKeys.BACKGROUND_LIGHT)
 
 var styles = StyleSheet.create({
   container: {
-    marginTop: 65,
+    marginTop: 64,
     paddingLeft: 20,
     paddingRight: 20,
     paddingTop: 20
   },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    margin: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    color: '#568885'
-  },
   description: {
     fontSize: 18,
-    color: '#568885',
+    color: MAIN_COLOR,
     fontWeight: 'bold'
   },
   buttonText: {
     fontSize: 18,
-    color: '#A2D6E1',
+    color: BACKGROUND_COLOR_LIGHT,
     alignSelf: 'center'
   },
   button: {
     height: 36,
-    backgroundColor: '#568885',
-    borderColor: '#568885',
+    backgroundColor: MAIN_COLOR,
+    borderColor: MAIN_COLOR,
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
@@ -47,24 +47,15 @@ var styles = StyleSheet.create({
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
-  inputField: {
-    height: 200,
-    fontSize: 18,
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 5,
-    marginTop: 5,
-    color: '#568885',
-    borderColor: '#E6E5ED',
-    backgroundColor: '#F8F8F9'
-  },
   background: {
-    backgroundColor: 'white',
+    backgroundColor: BACKGROUND_COLOR_LIGHT,
     flex: 1
+  },
+  image: {
+    height: 200,
+    width: null
   }
 });
-
-var Mailer = require('NativeModules').RNMail;
 
 class ContactPage extends Component {
   render() {
@@ -72,11 +63,15 @@ class ContactPage extends Component {
     const emailRecipients = [getLabel('contact.recipient')]
     return (
       <View style={styles.background}>
+      <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <View style={styles.container}>
+          <Image source={require('../assets/logo.png')}
+          resizeMode={Image.resizeMode.contain}
+          style={styles.image}/>
           <Text style={styles.description}>{getLabel('contact.details')}</Text>
           <TouchableHighlight style={styles.button}
             onPress={() => launchMailAppWith(emailSubject, emailRecipients)}
-            underlayColor='#79B5B3'>
+            underlayColor={BACKGROUND_COLOR_LIGHT}>
             <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
         </View>

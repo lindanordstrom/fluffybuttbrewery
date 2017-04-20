@@ -9,12 +9,15 @@ import {
   Navigator,
   TouchableOpacity
 } from 'react-native';
+import { getColor, ColorKeys } from 'Colors';
 
 var SplashPage = require('./SplashPage');
 var ProductListPage = require('./ProductListPage');
 var ProductDetailsPage = require('./ProductDetailsPage');
 var ContactPage = require('./ContactPage');
 
+const NAVIGATION_BAR_BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND);
+const NAVIGATION_BAR_TEXT = getColor(ColorKeys.MAIN)
 
 class NavigationManager extends Component {
   render() {
@@ -71,19 +74,6 @@ class NavigationManager extends Component {
     return this.noRoute(navigator);
 
   }
-  noRoute(navigator) {
-    return (
-      <View style={styles.container}>
-        <Text>Page not found</Text>
-        <TouchableOpacity
-            onPress={() => navigator.replace({
-              id: 'SplashPage'
-            })}>
-          <Text style={styles.reload}>Reload</Text>
-        </TouchableOpacity>
-      </View>
-    );
-  }
 }
 
 var NavigationBarRouteMapper = {
@@ -93,19 +83,19 @@ var NavigationBarRouteMapper = {
       return null;
     }
     return (
-      <TouchableOpacity style={styles.navigationBarBackButton}
+      <TouchableOpacity style={styles.navigationBarButton}
           onPress={() => navigator.pop()}>
-        <Text style={styles.navigationBarText}>{"<"} Back</Text>
+        <Text style={styles.navigationBarText}>{"<"} Tillbaka</Text>
       </TouchableOpacity>
     );
   },
   RightButton(route, navigator, index, navState) {
     var routeId = route.id;
     if (routeId === 'ProductListPage') {
-      return <TouchableOpacity style={styles.navigationBarBackButton}
+      return <TouchableOpacity style={styles.navigationBarButton}
                 onPress={() => navigator.push({
                   id: 'ContactPage',
-                  title: 'Contact'
+                  title: 'Kontakt'
                 })}>
               <Text style={{fontSize: 28, marginRight: 20}}>🏠</Text>
             </TouchableOpacity>;
@@ -120,25 +110,15 @@ var NavigationBarRouteMapper = {
 
 
 var styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  reload: {
-    fontWeight: 'bold',
-    color: 'red',
-    marginTop: 5
-  },
   navigationBar: {
-    backgroundColor: '#568885'
+    backgroundColor: NAVIGATION_BAR_BACKGROUND_COLOR
   },
-  navigationBarBackButton: {
+  navigationBarButton: {
     flex: 1,
     justifyContent: 'center'
   },
   navigationBarText: {
-    color: '#A2D6E1',
+    color: NAVIGATION_BAR_TEXT,
     margin: 10,
     fontSize: 16,
     fontWeight: 'bold',

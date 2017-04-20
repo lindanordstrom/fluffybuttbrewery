@@ -5,8 +5,14 @@ import {
   StyleSheet,
   View,
   Text,
-  ActivityIndicator
+  ActivityIndicator,
+  Image,
+  StatusBar
 } from 'react-native';
+import { getLabel } from 'Labels';
+import { getColor, ColorKeys } from 'Colors';
+
+const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
 
 var firebase = require('firebase');
 var config = {
@@ -19,40 +25,30 @@ var config = {
 firebase.initializeApp(config);
 var myFirebaseRef = firebase.database().ref('content');
 
-// Colortheme: E0BE92, 9F6250, A2D6E1, 7CA6B4, 568885
 var styles = StyleSheet.create({
-  appTitle: {
-    fontSize: 32,
-    color: '#A2D6E1',
-    fontWeight: 'bold'
-  },
-  errorMessage: {
-    fontSize: 18,
-    color: '#9DA5B4'
+  image: {
+    backgroundColor: BACKGROUND_COLOR,
+    flex: 1,
+    width: null
   },
   container: {
+    marginTop: 64,
     flex: 1,
-    backgroundColor: '#568885',
     alignItems: 'center',
     justifyContent: 'center'
   },
-  spinner: {
-    marginTop: 20
+  backgroundContainer: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
   }
 });
 
 class SplashPage extends Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      isLoading: false,
-      message: ''
-    };
-  }
   componentWillMount() {
     var navigator = this.props.navigator;
-    this.setState({ isLoading: true });
     setTimeout(() => {
       myFirebaseRef.on('value', snapshot => {
         this._handleResponse(snapshot.val())
@@ -61,27 +57,28 @@ class SplashPage extends Component {
   }
 
   render() {
-    var spinner = this.state.isLoading ? ( <ActivityIndicator style={styles.spinner} size='large'/> ) : ( <View/> );
     return (
       <View style={styles.container}>
-        <Text style={styles.appTitle}>FLUFFYBUTT</Text>
-        <Text style={styles.appTitle}>BREWERY</Text>
-        {spinner}
-        <Text style={styles.errorMessage}>{this.state.message}</Text>
+      <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
+        <View style={styles.backgroundContainer}>
+          <Image source={require('../assets/IMG_1671.png')}
+            resizeMode={Image.resizeMode.cover}
+            style={styles.image}/>
+        </View>
+        <View>
+          <ActivityIndicator color="white" size='large'/>
+        </View>
       </View>
     );
   }
 
   _handleResponse(response) {
-    this.setState({ isLoading: false , message: '' });
     if (response) {
       this.props.navigator.replace({
-        id: 'ProductListPage',
-        title: 'Fluffbutt Brewery',
+        id: getLabel('plp.id'),
+        title: getLabel('plp.title'),
         listings: response
       });
-    } else {
-      this.setState({ message: 'Server not available; please try again.'});
     }
   }
 }

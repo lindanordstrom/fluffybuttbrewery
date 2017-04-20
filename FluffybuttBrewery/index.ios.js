@@ -4,6 +4,6 @@ import {
   AppRegistry
 } from 'react-native';
 
-var NavigationManager = require('./NavigationManager');
+var NavigationManager = require('./js/NavigationManager');
 
 AppRegistry.registerComponent('FluffybuttBrewery', () => NavigationManager);
