@@ -109,7 +109,7 @@ class ProductDetailsPage extends Component {
           <Text style={styles.description}>{product.details}</Text>
           <TouchableHighlight style={styles.button}
             onPress={() => launchMailAppWith(emailSubject, emailRecipients, emailBody)}
-            underlayColor={THIRD_COLOR}>
+            underlayColor={BACKGROUND_COLOR}>
             <Text style={styles.buttonText}>{getLabel('pdp.contact.button')}</Text>
           </TouchableHighlight>
         </ScrollView>

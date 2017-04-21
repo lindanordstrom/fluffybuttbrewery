@@ -8,7 +8,8 @@ import {
   TextInput,
   Text,
   Image,
-  StatusBar
+  StatusBar,
+  ScrollView
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { launchMailAppWith } from 'MailHelper'
@@ -64,17 +65,17 @@ class ContactPage extends Component {
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <Image source={require('../assets/logo.png')}
           resizeMode={Image.resizeMode.contain}
           style={styles.image}/>
           <Text style={styles.description}>{getLabel('contact.details')}</Text>
           <TouchableHighlight style={styles.button}
             onPress={() => launchMailAppWith(emailSubject, emailRecipients)}
-            underlayColor={BACKGROUND_COLOR_LIGHT}>
+            underlayColor={BACKGROUND_COLOR}>
             <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
-        </View>
+        </ScrollView>
       </View>
     );
   }

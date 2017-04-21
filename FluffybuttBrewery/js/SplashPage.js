@@ -32,7 +32,6 @@ var styles = StyleSheet.create({
     width: null
   },
   container: {
-    marginTop: 64,
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center'

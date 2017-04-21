@@ -52,7 +52,6 @@ var styles = StyleSheet.create({
     width: null
   },
   container: {
-    backgroundColor: BACKGROUND_COLOR_LIGHT,
     marginTop: 65
   },
   backgroundContainer: {
@@ -79,14 +78,14 @@ class ProductListPage extends Component {
 
   render() {
     return (
-      <View style={styles.container}>
-      <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
+      <View style={styles.backgroundContainer}>
+        <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <View style={styles.backgroundContainer}>
           <Image source={require('../assets/IMG_1671.png')}
             resizeMode={Image.resizeMode.cover}
             style={styles.image}/>
         </View>
-        <View>
+        <View style={styles.container}>
           <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)}/>
         </View>
       </View>
