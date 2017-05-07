@@ -10,12 +10,13 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  BackAndroid
+  BackAndroid,
+  Modal
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { launchMailAppWith } from 'MailHelper'
+import { sendMailWith, validateEmail } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
-import { getContactInformation } from 'FirebaseConnection';
+import { getContactInformationRef } from 'FirebaseConnection';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -32,7 +33,8 @@ var styles = StyleSheet.create({
   description: {
     fontSize: 18,
     color: MAIN_COLOR,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    paddingBottom: 20
   },
   buttonText: {
     fontSize: 18,
@@ -46,7 +48,9 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
-    marginTop: 20,
+    margin: 20,
+    paddingLeft: 5,
+    paddingRight: 5,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -57,20 +61,57 @@ var styles = StyleSheet.create({
   image: {
     height: 200,
     width: null
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalInnerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: BACKGROUND_COLOR_LIGHT,
+  },
+    inputField: {
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#568885',
+    borderRadius: 8,
+    margin: 10,
+    marginTop: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
+    color: '#568885'
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    margin: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    color: '#568885'
+  },
 });
 
 class ContactPage extends Component {
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
+
   constructor() {
     super()
     this.state = {
       title: "",
       address: "",
       telephone: "",
-      about: ""
+      about: "",
+      modalVisible: false,
+      body: null,
+      sender: null
     };
 
-    getContactInformation().once('value')
+    getContactInformationRef().once('value')
     .then(snapshot => {
       this.setState({
         title: snapshot.val().Title,
@@ -79,6 +120,49 @@ class ContactPage extends Component {
         about: snapshot.val().About
       });
     });
+  }
+
+  renderModalView() {
+    let emailSubject = getLabel('contact.subject')
+    let emailRecipient = getLabel('contact.recipient')
+    let emailSender = getLabel('contact.sender')
+
+    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible}>
+               <View style={styles.modalContainer}>
+                <View style={styles.modalInnerContainer}>
+                  <Text style={styles.title}>{getLabel('contact.button')}</Text>
+                  <TextInput style={[styles.inputField, {height: 30}]}
+                    multiline={false}
+                    onChangeText={(value) => this.setState({sender: value})}
+                    value={this.state.sender}
+                    placeholder={getLabel('contact.placeholderEmail')}/>
+                  <TextInput style={[styles.inputField, {height: 300}]}
+                    multiline={true}
+                    onChangeText={(value) => this.setState({body: value})}
+                    value={this.state.body}
+                    placeholder={getLabel('contact.placeholder')}/>
+                  <View style={{flexDirection: 'row'}}>
+                  <TouchableHighlight style={styles.button}
+                    onPress={() => {
+                      if (validateEmail(this.state.sender)) {
+                        let body = formatBodyWithSender(this.state.body, this.state.sender)
+                        sendMailWith(emailSender, this.state.subject, emailRecipient, body)
+                        this.setState({body: null})
+                        this.setModalVisible(false)
+                      }
+                    }}
+                    underlayColor={BACKGROUND_COLOR}>
+                    <Text style={styles.buttonText}>{getLabel('contact.send')}</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight style={styles.button}
+                    onPress={() => this.setModalVisible(false)}
+                    underlayColor={BACKGROUND_COLOR}>
+                    <Text style={styles.buttonText}>{getLabel('contact.close')}</Text>
+                  </TouchableHighlight>
+                  </View>
+                </View>
+               </View>
+              </Modal>);
   }
 
   render() {
@@ -92,12 +176,12 @@ class ContactPage extends Component {
         return true;
       }
     });
-    const emailSubject = getLabel('contact.subject')
-    const emailRecipients = [getLabel('contact.recipient')]
+
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <ScrollView style={styles.container}>
+          {this.renderModalView()}
           <Image source={require('../assets/logo.png')}
           resizeMode={Image.resizeMode.contain}
           style={styles.image}/>
@@ -106,7 +190,7 @@ class ContactPage extends Component {
           <Text style={styles.description}>{this.state.address}</Text>
           <Text style={styles.description}>{this.state.telephone}</Text>
           <TouchableHighlight style={styles.button}
-            onPress={() => launchMailAppWith(emailSubject, emailRecipients)}
+            onPress={() => this.setModalVisible(true)}
             underlayColor={BACKGROUND_COLOR}>
             <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>

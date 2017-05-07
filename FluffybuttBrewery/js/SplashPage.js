@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { getColor, ColorKeys } from 'Colors';
-import { getProducts } from 'FirebaseConnection';
+import { getProductsRef } from 'FirebaseConnection';
 
 const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
 
@@ -39,7 +39,7 @@ var styles = StyleSheet.create({
 class SplashPage extends Component {
   componentWillMount() {
     setTimeout(() => {
-      getProducts().on('value', snapshot => {
+      getProductsRef().on('value', snapshot => {
         this._handleResponse(snapshot.val())
       });
     }, 1000);

@@ -16,6 +16,8 @@ const labels = {
     'launch.errorTitle': 'Server Error',
     'launch.errorMessage': 'Vänligen försök igen',
 
+    // Validate email
+    'invalidEmail.message': 'Vänligen fyll i en epost-address',
 
     // Product List Page
     'plp.title': 'Fluffybutt Brewery',
@@ -29,10 +31,15 @@ const labels = {
     // Contact Page
 
     'contact.button': 'Maila Bryggeriet',
+    'contact.placeholder': 'Skriv in ditt meddelande här',
+    'contact.placeholderEmail': 'Skriv in din epost-address',
+    'contact.send': 'Skicka',
+    'contact.close': 'Avbryt',
     'contact.errorTitle': 'Ett fel inträffade',
     'contact.errorMessage': 'Vi kunde inte öppna din e-postklient, vänligen skicka din förfrågan till andreas.blyberg@live.se',
     'contact.subject': 'Allmän förfrågan',
-    'contact.recipient': 'andreas.blyberg@live.se',
+    'contact.recipient': 'lindanordstrom86@gmail.com',
+    'contact.sender': 'lindanordstrom86@gmail.com',
 
     // Product Details Page
 

@@ -9,10 +9,12 @@ import {
   Text,
   ScrollView,
   Dimensions,
-  StatusBar
+  StatusBar,
+  Modal,
+  TextInput
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { launchMailAppWith } from 'MailHelper'
+import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
@@ -77,38 +79,125 @@ var styles = StyleSheet.create({
   background: {
     backgroundColor: BACKGROUND_COLOR_LIGHT,
     flex: 1
-  }
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    padding: 20,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalInnerContainer: {
+    borderRadius: 10,
+    alignItems: 'center',
+    backgroundColor: BACKGROUND_COLOR_LIGHT,
+  },
+    inputField: {
+    fontSize: 18,
+    borderWidth: 1,
+    borderColor: '#568885',
+    borderRadius: 8,
+    margin: 10,
+    marginTop: 0,
+    paddingLeft: 10,
+    paddingRight: 10,
+    color: '#568885'
+  },
+  contactTitle: {
+    fontSize: 25,
+    fontWeight: 'bold',
+    margin: 5,
+    marginLeft: 20,
+    marginRight: 20,
+    color: '#568885'
+  },
 });
 
 class ProductDetailsPage extends Component {
+  setModalVisible(visible) {
+    this.setState({modalVisible: visible});
+  }
 
-  render() {
-    let product = this.props.product;
+  constructor(props) {
+    super()
+
+    let product = props.product;
     let title = product.title
-    let emailSubject = getLabel('pdp.contact.subject') + product.id + " " + title
-    let emailRecipients = [getLabel('contact.recipient')]
+    let emailSubject = getLabel('pdp.contact.subject') + product.type + " " + title
     let emailBody = getLabel('pdp.contact.body') + title
 
+    this.state = {
+      modalVisible: false,
+      product: product,
+      body: emailBody,
+      sender: null,
+      subject: emailSubject
+    };
+  }
+
+  renderModalView() {
+    let emailSender = getLabel('contact.sender')
+    let emailRecipients = getLabel('contact.recipient')
+
+    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible}>
+               <View style={styles.modalContainer}>
+                <View style={styles.modalInnerContainer}>
+                  <Text style={styles.contactTitle}>{getLabel('contact.button')}</Text>
+                  <TextInput style={[styles.inputField, {height: 30}]}
+                    multiline={false}
+                    onChangeText={(value) => this.setState({sender: value})}
+                    value={this.state.sender}
+                    placeholder={getLabel('contact.placeholderEmail')}/>
+                  <TextInput style={[styles.inputField, {height: 300}]}
+                    multiline={true}
+                    onChangeText={(value) => this.setState({body: value})}
+                    value={this.state.body}
+                    placeholder={getLabel('contact.placeholder')}/>
+                  <View style={{flexDirection: 'row'}}>
+                  <TouchableHighlight style={styles.button}
+                    onPress={() => {
+                      if (validateEmail(this.state.sender)) {
+                        let body = formatBodyWithSender(this.state.body, this.state.sender)
+                        sendMailWith(emailSender, this.state.subject, emailRecipients, body)
+                        this.setState({body: null})
+                        this.setModalVisible(false)
+                      }
+                    }}
+                    underlayColor={BACKGROUND_COLOR}>
+                    <Text style={styles.buttonText}>{getLabel('contact.send')}</Text>
+                  </TouchableHighlight>
+                  <TouchableHighlight style={styles.button}
+                    onPress={() => this.setModalVisible(false)}
+                    underlayColor={BACKGROUND_COLOR}>
+                    <Text style={styles.buttonText}>{getLabel('contact.close')}</Text>
+                  </TouchableHighlight>
+                  </View>
+                </View>
+               </View>
+              </Modal>);
+  }
+
+  render() {
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <ScrollView style={styles.container}>
+          {this.renderModalView()}
           <Image style={styles.image}
-              source={{uri: product.img_url}}
+              source={{uri: this.state.product.img_url}}
               resizeMode={Image.resizeMode.contain} />
           <View style={styles.heading}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.title}>{title}</Text>
-              <Text style={styles.subtitle}>{product.type}</Text>
+              <Text style={styles.title}>{this.state.product.title}</Text>
+              <Text style={styles.subtitle}>{this.state.product.type}</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={[styles.subtitle, {fontWeight: 'bold'}]}>{product.price}</Text>
-              <Text style={styles.subtitle}>{product.alc}</Text>
+              <Text style={[styles.subtitle, {fontWeight: 'bold'}]}>{this.state.product.price}</Text>
+              <Text style={styles.subtitle}>{this.state.product.alc}</Text>
             </View>
           </View>
-          <Text style={styles.description}>{product.details}</Text>
+          <Text style={styles.description}>{this.state.product.details}</Text>
           <TouchableHighlight style={styles.button}
-            onPress={() => launchMailAppWith(emailSubject, emailRecipients, emailBody)}
+            onPress={() => this.setModalVisible(true)}
             underlayColor={BACKGROUND_COLOR}>
             <Text style={styles.buttonText}>{getLabel('pdp.contact.button')}</Text>
           </TouchableHighlight>

@@ -10,12 +10,19 @@ var config = {
   messagingSenderId: "809970246372"
 };
 firebase.initializeApp(config);
+firebase.auth().signInAnonymously();
+
 var myFirebaseRef = firebase.database();
 
-export function getProducts() {
+export function getEmailRef() {
+  var newPostKey = myFirebaseRef.ref('emails').push().key;
+  return myFirebaseRef.ref('emails/' + newPostKey)
+}
+
+export function getProductsRef() {
   return myFirebaseRef.ref('content/Products')
 }
 
-export function getContactInformation() {
+export function getContactInformationRef() {
   return myFirebaseRef.ref('content/Contact')
 }
