@@ -8,7 +8,8 @@ import {
   TouchableHighlight,
   ListView,
   Text,
-  StatusBar
+  StatusBar,
+  ScrollView
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { getColor, ColorKeys } from 'Colors';
@@ -85,9 +86,9 @@ class ProductListPage extends Component {
             resizeMode={Image.resizeMode.cover}
             style={styles.image}/>
         </View>
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
           <ListView dataSource={this.state.dataSource} renderRow={this.renderRow.bind(this)}/>
-        </View>
+        </ScrollView>
       </View>
     );
   }

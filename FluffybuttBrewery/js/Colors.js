@@ -22,5 +22,3 @@ export const ColorKeys = {
 export function getColor(key) {
   return ColorValues[key] || ColorValues[ColorKeys.DEFAULT];
 }
-
-// import { getColor, ColorKeys } from 'Colors';

@@ -9,11 +9,13 @@ import {
   Text,
   Image,
   StatusBar,
-  ScrollView
+  ScrollView,
+  BackAndroid
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { launchMailAppWith } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
+import { getContactInformation } from 'FirebaseConnection';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -59,7 +61,37 @@ var styles = StyleSheet.create({
 });
 
 class ContactPage extends Component {
+  constructor() {
+    super()
+    this.state = {
+      title: "",
+      address: "",
+      telephone: "",
+      about: ""
+    };
+
+    getContactInformation().once('value')
+    .then(snapshot => {
+      this.setState({
+        title: snapshot.val().Title,
+        address: snapshot.val().Address,
+        telephone: snapshot.val().Telephone,
+        about: snapshot.val().About
+      });
+    });
+  }
+
   render() {
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      try {
+        this.props.navigator.pop();
+        return true;
+      }
+      catch (err) {
+        ToastAndroid.show("Cannot go back. Exiting the app...", ToastAndroid.SHORT);
+        return true;
+      }
+    });
     const emailSubject = getLabel('contact.subject')
     const emailRecipients = [getLabel('contact.recipient')]
     return (
@@ -69,7 +101,10 @@ class ContactPage extends Component {
           <Image source={require('../assets/logo.png')}
           resizeMode={Image.resizeMode.contain}
           style={styles.image}/>
-          <Text style={styles.description}>{getLabel('contact.details')}</Text>
+          <Text style={styles.description}>{this.state.title}</Text>
+          <Text style={styles.description}>{this.state.about}</Text>
+          <Text style={styles.description}>{this.state.address}</Text>
+          <Text style={styles.description}>{this.state.telephone}</Text>
           <TouchableHighlight style={styles.button}
             onPress={() => launchMailAppWith(emailSubject, emailRecipients)}
             underlayColor={BACKGROUND_COLOR}>

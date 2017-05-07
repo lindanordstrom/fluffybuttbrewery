@@ -12,6 +12,11 @@ const labels = {
    */
   common: {
 
+    // Launch
+    'launch.errorTitle': 'Server Error',
+    'launch.errorMessage': 'Vänligen försök igen',
+
+
     // Product List Page
     'plp.title': 'Fluffybutt Brewery',
     'plp.id': 'ProductListPage',
@@ -24,7 +29,6 @@ const labels = {
     // Contact Page
 
     'contact.button': 'Maila Bryggeriet',
-    'contact.details': 'Fluffybutt Brewery\nAntenngatan 55A, 42133 Västra Frölunda\nTel: 0730-40 10 15\n\n',
     'contact.errorTitle': 'Ett fel inträffade',
     'contact.errorMessage': 'Vi kunde inte öppna din e-postklient, vänligen skicka din förfrågan till andreas.blyberg@live.se',
     'contact.subject': 'Allmän förfrågan',

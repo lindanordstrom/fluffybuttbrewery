@@ -99,7 +99,7 @@ class ProductDetailsPage extends Component {
           <View style={styles.heading}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.title}>{title}</Text>
-              <Text style={styles.subtitle}>{product.id}</Text>
+              <Text style={styles.subtitle}>{product.type}</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={[styles.subtitle, {fontWeight: 'bold'}]}>{product.price}</Text>

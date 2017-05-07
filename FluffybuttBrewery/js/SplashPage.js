@@ -7,23 +7,14 @@ import {
   Text,
   ActivityIndicator,
   Image,
-  StatusBar
+  StatusBar,
+  Alert
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { getColor, ColorKeys } from 'Colors';
+import { getProducts } from 'FirebaseConnection';
 
 const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
-
-var firebase = require('firebase');
-var config = {
-  apiKey: 'AIzaSyAuZBIvBKLXea8bWX-SRiP-t5IXrDR70rg',
-  authDomain: 'fluffybuttbrewery-e4de1.firebaseapp.com',
-  databaseURL: 'https://fluffybuttbrewery-e4de1.firebaseio.com',
-  storageBucket: 'fluffybuttbrewery-e4de1.appspot.com',
-  messagingSenderId: "809970246372"
-};
-firebase.initializeApp(config);
-var myFirebaseRef = firebase.database().ref('content');
 
 var styles = StyleSheet.create({
   image: {
@@ -47,9 +38,8 @@ var styles = StyleSheet.create({
 
 class SplashPage extends Component {
   componentWillMount() {
-    var navigator = this.props.navigator;
     setTimeout(() => {
-      myFirebaseRef.on('value', snapshot => {
+      getProducts().on('value', snapshot => {
         this._handleResponse(snapshot.val())
       });
     }, 1000);
@@ -72,13 +62,22 @@ class SplashPage extends Component {
   }
 
   _handleResponse(response) {
-    if (response) {
+    if (response && response.length > 0) {
       this.props.navigator.replace({
         id: getLabel('plp.id'),
         title: getLabel('plp.title'),
         listings: response
       });
+    } else {
+      this._alertAndReload();
     }
+  }
+
+  _alertAndReload() {
+    Alert.alert(getLabel('launch.errorTitle'), getLabel('launch.errorMessage'),
+    [
+      {text: 'OK', onPress: () => this.props.navigator.replace({id: 'SplashPage'})},
+    ])
   }
 }
 
