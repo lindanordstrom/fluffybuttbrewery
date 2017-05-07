@@ -48,6 +48,7 @@ var styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 8,
     marginBottom: 10,
+    marginTop: 5,
     margin: 20,
     paddingLeft: 5,
     paddingRight: 5,
@@ -135,8 +136,11 @@ class ContactPage extends Component {
                     multiline={false}
                     onChangeText={(value) => this.setState({sender: value})}
                     value={this.state.sender}
+                    returnKeyType="next"
+                    onSubmitEditing={() => this.refs["body"].focus()}
                     placeholder={getLabel('contact.placeholderEmail')}/>
-                  <TextInput style={[styles.inputField, {height: 300}]}
+                  <TextInput style={[styles.inputField, {height: 200}]}
+                    ref="body"
                     multiline={true}
                     onChangeText={(value) => this.setState({body: value})}
                     value={this.state.body}

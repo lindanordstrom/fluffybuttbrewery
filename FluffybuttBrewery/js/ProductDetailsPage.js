@@ -146,8 +146,11 @@ class ProductDetailsPage extends Component {
                     multiline={false}
                     onChangeText={(value) => this.setState({sender: value})}
                     value={this.state.sender}
+                    returnKeyType="next"
+                    onSubmitEditing={() => this.refs["body"].focus()}
                     placeholder={getLabel('contact.placeholderEmail')}/>
-                  <TextInput style={[styles.inputField, {height: 300}]}
+                  <TextInput style={[styles.inputField, {height: 200}]}
+                    ref="body"
                     multiline={true}
                     onChangeText={(value) => this.setState({body: value})}
                     value={this.state.body}
