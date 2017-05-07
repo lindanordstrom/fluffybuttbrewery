@@ -138,7 +138,7 @@ class ProductDetailsPage extends Component {
     let emailSender = getLabel('contact.sender')
     let emailRecipients = getLabel('contact.recipient')
 
-    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible}>
+    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
                   <Text style={styles.contactTitle}>{getLabel('contact.button')}</Text>

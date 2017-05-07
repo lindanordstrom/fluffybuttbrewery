@@ -7,7 +7,8 @@ import {
   Text,
   View,
   Navigator,
-  TouchableOpacity
+  TouchableOpacity,
+  BackAndroid
 } from 'react-native';
 import { getColor, ColorKeys } from 'Colors';
 
@@ -40,6 +41,14 @@ class NavigationManager extends Component {
     );
   }
   renderScene(route, navigator) {
+    BackAndroid.addEventListener('hardwareBackPress', () => {
+      try {
+        navigator.pop();
+        return true;
+      }
+      catch (err) {}
+    });
+    
     var routeId = route.id;
     if (routeId === 'SplashPage') {
       return (

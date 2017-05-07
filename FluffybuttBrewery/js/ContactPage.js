@@ -10,7 +10,6 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  BackAndroid,
   Modal
 } from 'react-native';
 import { getLabel } from 'Labels';
@@ -128,7 +127,7 @@ class ContactPage extends Component {
     let emailRecipient = getLabel('contact.recipient')
     let emailSender = getLabel('contact.sender')
 
-    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible}>
+    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
                   <Text style={styles.title}>{getLabel('contact.button')}</Text>
@@ -170,17 +169,6 @@ class ContactPage extends Component {
   }
 
   render() {
-    BackAndroid.addEventListener('hardwareBackPress', () => {
-      try {
-        this.props.navigator.pop();
-        return true;
-      }
-      catch (err) {
-        ToastAndroid.show("Cannot go back. Exiting the app...", ToastAndroid.SHORT);
-        return true;
-      }
-    });
-
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
