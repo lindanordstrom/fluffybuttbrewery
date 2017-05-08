@@ -17,6 +17,7 @@ import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { isAndroid } from 'PlatformWrapper';
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
@@ -168,6 +169,7 @@ class ProductDetailsPage extends Component {
                         sendMailWith(emailSender, this.state.subject, emailRecipients, body)
                         this.setState({body: null})
                         this.setModalVisible(false)
+                        this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);
                       }
                     }}
                     underlayColor={BACKGROUND_COLOR}>
@@ -210,6 +212,13 @@ class ProductDetailsPage extends Component {
             <Text style={styles.buttonText}>{getLabel('pdp.contact.button')}</Text>
           </TouchableHighlight>
         </ScrollView>
+        <Toast
+        ref="toast"
+        position='top'
+        fadeInDuration={750}
+        fadeOutDuration={1000}
+        opacity={0.8}
+        />
       </View>
     );
   }

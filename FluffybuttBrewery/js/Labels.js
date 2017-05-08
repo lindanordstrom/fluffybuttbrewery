@@ -40,6 +40,7 @@ const labels = {
     'contact.subject': 'Allmän förfrågan',
     'contact.recipient': 'lindanordstrom86@gmail.com',
     'contact.sender': 'lindanordstrom86@gmail.com',
+    'contact.emailSent': '          Ditt mail har skickats!          ',
 
     // Product Details Page
 

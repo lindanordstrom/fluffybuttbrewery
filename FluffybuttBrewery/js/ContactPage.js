@@ -13,10 +13,11 @@ import {
   Modal
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { sendMailWith, validateEmail } from 'MailHelper'
+import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { getContactInformationRef } from 'FirebaseConnection';
 import { isAndroid } from 'PlatformWrapper';
+import Toast, { DURATION } from 'react-native-easy-toast'
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -152,9 +153,10 @@ class ContactPage extends Component {
                     onPress={() => {
                       if (validateEmail(this.state.sender)) {
                         let body = formatBodyWithSender(this.state.body, this.state.sender)
-                        sendMailWith(emailSender, this.state.subject, emailRecipient, body)
+                        sendMailWith(emailSender, emailSubject, emailRecipient, body)
                         this.setState({body: null})
                         this.setModalVisible(false)
+                        this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);
                       }
                     }}
                     underlayColor={BACKGROUND_COLOR}>
@@ -190,6 +192,13 @@ class ContactPage extends Component {
             <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
         </ScrollView>
+        <Toast
+        ref="toast"
+        position='top'
+        fadeInDuration={750}
+        fadeOutDuration={1000}
+        opacity={0.8}
+        />
       </View>
     );
   }
