@@ -16,6 +16,7 @@ import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { getContactInformationRef } from 'FirebaseConnection';
+import { isAndroid } from 'PlatformWrapper';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -49,8 +50,8 @@ var styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 5,
     margin: 20,
-    paddingLeft: 5,
-    paddingRight: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -73,7 +74,9 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: BACKGROUND_COLOR_LIGHT,
   },
-    inputField: {
+  inputField: {
+    textAlignVertical: 'top',
+    alignSelf: 'stretch',
     fontSize: 18,
     borderWidth: 1,
     borderColor: '#568885',
@@ -131,7 +134,7 @@ class ContactPage extends Component {
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
                   <Text style={styles.title}>{getLabel('contact.button')}</Text>
-                  <TextInput style={[styles.inputField, {height: 30}]}
+                  <TextInput style={[styles.inputField, {height: isAndroid() ? 40 : 30}]}
                     multiline={false}
                     onChangeText={(value) => this.setState({sender: value})}
                     value={this.state.sender}

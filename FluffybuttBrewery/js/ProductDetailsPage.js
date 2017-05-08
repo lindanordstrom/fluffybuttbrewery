@@ -16,6 +16,7 @@ import {
 import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
+import { isAndroid } from 'PlatformWrapper';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
@@ -73,6 +74,8 @@ var styles = StyleSheet.create({
     marginTop: 20,
     margin: 40,
     padding: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -91,7 +94,9 @@ var styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: BACKGROUND_COLOR_LIGHT,
   },
-    inputField: {
+  inputField: {
+    textAlignVertical: 'top',
+    alignSelf: 'stretch',
     fontSize: 18,
     borderWidth: 1,
     borderColor: '#568885',
@@ -142,7 +147,7 @@ class ProductDetailsPage extends Component {
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
                   <Text style={styles.contactTitle}>{getLabel('contact.button')}</Text>
-                  <TextInput style={[styles.inputField, {height: 30}]}
+                  <TextInput style={[styles.inputField, {height: isAndroid() ? 40 : 30}]}
                     multiline={false}
                     onChangeText={(value) => this.setState({sender: value})}
                     value={this.state.sender}
