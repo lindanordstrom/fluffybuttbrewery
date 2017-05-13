@@ -112,7 +112,8 @@ class ContactPage extends Component {
       about: "",
       modalVisible: false,
       body: null,
-      sender: null
+      sender: null,
+      recipient: null
     };
 
     getContactInformationRef().once('value')
@@ -121,15 +122,14 @@ class ContactPage extends Component {
         title: snapshot.val().Title,
         address: snapshot.val().Address,
         telephone: snapshot.val().Telephone,
-        about: snapshot.val().About
+        about: snapshot.val().About,
+        recipient: snapshot.val().Email,
       });
     });
   }
 
   renderModalView() {
     let emailSubject = getLabel('contact.subject')
-    let emailRecipient = getLabel('contact.recipient')
-    let emailSender = getLabel('contact.sender')
 
     return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
                <View style={styles.modalContainer}>
@@ -152,8 +152,7 @@ class ContactPage extends Component {
                   <TouchableHighlight style={styles.button}
                     onPress={() => {
                       if (validateEmail(this.state.sender)) {
-                        let body = formatBodyWithSender(this.state.body, this.state.sender)
-                        sendMailWith(emailSender, emailSubject, emailRecipient, body)
+                        sendMailWith(this.state.sender, emailSubject, this.state.recipient, this.state.body)
                         this.setState({body: null})
                         this.setModalVisible(false)
                         this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);

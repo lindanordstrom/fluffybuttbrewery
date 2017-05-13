@@ -18,6 +18,7 @@ import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { isAndroid } from 'PlatformWrapper';
 import Toast, { DURATION } from 'react-native-easy-toast'
+import { getContactInformationRef } from 'FirebaseConnection';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
@@ -136,14 +137,19 @@ class ProductDetailsPage extends Component {
       product: product,
       body: emailBody,
       sender: null,
-      subject: emailSubject
+      subject: emailSubject,
+      recipient: null
     };
+
+    getContactInformationRef().once('value')
+    .then(snapshot => {
+      this.setState({
+        recipient: snapshot.val().Email,
+      });
+    });
   }
 
   renderModalView() {
-    let emailSender = getLabel('contact.sender')
-    let emailRecipients = getLabel('contact.recipient')
-
     return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
@@ -165,8 +171,7 @@ class ProductDetailsPage extends Component {
                   <TouchableHighlight style={styles.button}
                     onPress={() => {
                       if (validateEmail(this.state.sender)) {
-                        let body = formatBodyWithSender(this.state.body, this.state.sender)
-                        sendMailWith(emailSender, this.state.subject, emailRecipients, body)
+                        sendMailWith(this.state.sender, this.state.subject, this.state.recipient, this.state.body)
                         this.setState({body: null})
                         this.setModalVisible(false)
                         this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);

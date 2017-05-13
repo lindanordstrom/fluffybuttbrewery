@@ -38,8 +38,6 @@ const labels = {
     'contact.errorTitle': 'Ett fel inträffade',
     'contact.errorMessage': 'Vi kunde inte öppna din e-postklient, vänligen skicka din förfrågan till andreas.blyberg@live.se',
     'contact.subject': 'Allmän förfrågan',
-    'contact.recipient': 'lindanordstrom86@gmail.com',
-    'contact.sender': 'lindanordstrom86@gmail.com',
     'contact.emailSent': '          Ditt mail har skickats!          ',
 
     // Product Details Page

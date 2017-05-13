@@ -19,11 +19,11 @@
    });
  }
 
- export function sendMailWith(sender, subject, recipients, body) {
+ export function sendMailWith(sender, subject, recipient, body) {
     getEmailRef().set({
       sender: sender,
       subject: subject,
-      recipients : recipients,
+      recipients : recipient,
       body : body
     });
  }
@@ -38,9 +38,4 @@
     }
 
     return valid;
-}
-
-export function formatBodyWithSender(body, sender) {
-  body = 'Detta meddelande är skickat ifrån ' + sender + '\n\n' + body
-  return body
 }
