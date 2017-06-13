@@ -182,7 +182,7 @@ class ContactPage extends Component {
           resizeMode={Image.resizeMode.contain}
           style={styles.image}/>
           <Text style={styles.description}>{this.state.title}</Text>
-          <Text style={styles.description}>{this.state.about}</Text>
+          <Text style={[styles.description, {fontWeight: 'normal'}]}>{this.state.about}</Text>
           <Text style={styles.description}>{this.state.address}</Text>
           <Text style={styles.description}>{this.state.telephone}</Text>
           <TouchableHighlight style={styles.button}

@@ -94,8 +94,6 @@ class ProductListPage extends Component {
   }
 
   renderRow(rowData, sectionID, rowID) {
-    rowData.price = rowData.price ? rowData.price + getLabel('plp.currencyLabel') : getLabel('plp.priceMissing')
-    rowData.alc = rowData.alc ? getLabel('plp.alcoholPercentageLabel') + rowData.alc + getLabel('plp.percentageLabel') : getLabel('plp.alcoholPercentageMissing')
     return (
       <TouchableHighlight onPress={() => this.rowPressed(rowData.title)}
       underlayColor={BACKGROUND_COLOR}>

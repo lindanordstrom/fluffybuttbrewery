@@ -34,6 +34,7 @@ var styles = StyleSheet.create({
   },
   heading: {
     backgroundColor: BACKGROUND_COLOR,
+    padding: 20,
     paddingTop: 5,
     paddingBottom: 5
   },
@@ -45,15 +46,13 @@ var styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: 'bold',
-    marginLeft: 20,
-    marginRight: 20,
-    color: MAIN_COLOR
+    color: MAIN_COLOR,
+    width: SCREEN_WIDTH * 0.6 - 20
   },
   subtitle: {
     fontSize: 18,
-    marginLeft: 20,
-    marginRight: 20,
-    color: SECONDARY_COLOR
+    color: SECONDARY_COLOR,
+    width: SCREEN_WIDTH * 0.4 - 20
   },
   description: {
     fontSize: 18,
@@ -61,6 +60,12 @@ var styles = StyleSheet.create({
     marginLeft: 20,
     marginRight: 20,
     color: MAIN_COLOR
+  },
+  stockDescription: {
+    fontSize: 14,
+    margin: 5,
+    marginLeft: 20,
+    marginRight: 20,
   },
   buttonText: {
     fontSize: 18,
@@ -192,6 +197,8 @@ class ProductDetailsPage extends Component {
   }
 
   render() {
+    const inStockLabel = this.state.product.in_stock ? getLabel('pdp.inStock.label') : getLabel('pdp.notInStock.label')
+    const inStockStyleColor = this.state.product.in_stock ? 'green' : 'red'
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
@@ -203,13 +210,14 @@ class ProductDetailsPage extends Component {
           <View style={styles.heading}>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={styles.title}>{this.state.product.title}</Text>
-              <Text style={styles.subtitle}>{this.state.product.type}</Text>
+              <Text style={[styles.subtitle, {textAlign: 'right'}]}>{this.state.product.type}</Text>
             </View>
             <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
               <Text style={[styles.subtitle, {fontWeight: 'bold'}]}>{this.state.product.price}</Text>
-              <Text style={styles.subtitle}>{this.state.product.alc}</Text>
+              <Text style={[styles.subtitle, {textAlign: 'right', width: SCREEN_WIDTH * 0.6 - 20}]}>{this.state.product.alc}</Text>
             </View>
           </View>
+          <Text style={[styles.stockDescription, {color: inStockStyleColor}]}>{ inStockLabel }</Text>
           <Text style={styles.description}>{this.state.product.details}</Text>
           <TouchableHighlight style={styles.button}
             onPress={() => this.setModalVisible(true)}

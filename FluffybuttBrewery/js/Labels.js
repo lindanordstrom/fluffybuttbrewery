@@ -22,11 +22,6 @@ const labels = {
     // Product List Page
     'plp.title': 'Fluffybutt Brewery',
     'plp.id': 'ProductListPage',
-    'plp.currencyLabel': 'kr',
-    'plp.alcoholPercentageLabel': 'Alkoholhalt: ',
-    'plp.percentageLabel': '%',
-    'plp.alcoholPercentageMissing': 'alkoholhalt saknas',
-    'plp.priceMissing': 'pris saknas',
 
     // Contact Page
 
@@ -46,6 +41,8 @@ const labels = {
     'pdp.contact.button': 'Kontakta bryggeriet angående denna produkt',
     'pdp.contact.subject': 'Ang: ',
     'pdp.contact.body': 'Hej, jag är intresserad utav ',
+    'pdp.inStock.label': 'I lager ✅',
+    'pdp.notInStock.label': 'Ej i lager ❌',
   },
 
   /**

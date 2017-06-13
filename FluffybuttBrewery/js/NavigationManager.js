@@ -41,15 +41,20 @@ class NavigationManager extends Component {
     );
   }
   renderScene(route, navigator) {
+    var routeId = route.id;
+
     BackAndroid.addEventListener('hardwareBackPress', () => {
       try {
-        navigator.pop();
+        if (routeId != 'ProductListPage') {
+          navigator.pop();
+        } else {
+          BackAndroid.exitApp();
+        }
         return true;
       }
-      catch (err) {}
+      catch (err) { }
     });
-    
-    var routeId = route.id;
+
     if (routeId === 'SplashPage') {
       return (
         <SplashPage
