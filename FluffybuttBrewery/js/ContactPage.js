@@ -10,7 +10,8 @@ import {
   Image,
   StatusBar,
   ScrollView,
-  Modal
+  Modal,
+  MapView
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
@@ -18,6 +19,7 @@ import { getColor, ColorKeys } from 'Colors';
 import { getContactInformationRef } from 'FirebaseConnection';
 import { isAndroid } from 'PlatformWrapper';
 import Toast, { DURATION } from 'react-native-easy-toast'
+import Communications from 'react-native-communications';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -113,7 +115,9 @@ class ContactPage extends Component {
       modalVisible: false,
       body: null,
       sender: null,
-      recipient: null
+      recipient: null,
+      latitude: 0,
+      longitude: 0
     };
 
     getContactInformationRef().once('value')
@@ -124,6 +128,8 @@ class ContactPage extends Component {
         telephone: snapshot.val().Telephone,
         about: snapshot.val().About,
         recipient: snapshot.val().Email,
+        latitude: snapshot.val().Latitude || 0,
+        longitude: snapshot.val().Longitude || 0
       });
     });
   }
@@ -172,6 +178,24 @@ class ContactPage extends Component {
               </Modal>);
   }
 
+  renderMapView() {
+    if (isAndroid()) { return; }
+    return (<MapView
+              style={{height: 200, marginTop: 20, marginBottom: 40}}
+              region={{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                latitudeDelta: 0.01,
+                longitudeDelta: 0.01,
+              }}
+              annotations={[{
+                latitude: this.state.latitude,
+                longitude: this.state.longitude,
+                title: getLabel('plp.title')
+              }]}
+            />);
+}
+
   render() {
     return (
       <View style={styles.background}>
@@ -184,12 +208,17 @@ class ContactPage extends Component {
           <Text style={styles.description}>{this.state.title}</Text>
           <Text style={[styles.description, {fontWeight: 'normal'}]}>{this.state.about}</Text>
           <Text style={styles.description}>{this.state.address}</Text>
-          <Text style={styles.description}>{this.state.telephone}</Text>
+          <TouchableHighlight
+            onPress={() => Communications.phonecall(this.state.telephone, false)}
+            underlayColor={BACKGROUND_COLOR_LIGHT}>
+            <Text style={[styles.description, {textDecorationLine: 'underline'}]}>{this.state.telephone}</Text>
+          </TouchableHighlight>
           <TouchableHighlight style={styles.button}
             onPress={() => this.setModalVisible(true)}
             underlayColor={BACKGROUND_COLOR}>
             <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
+          {this.renderMapView()}
         </ScrollView>
         <Toast
         ref="toast"
