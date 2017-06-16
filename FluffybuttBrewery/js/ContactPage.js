@@ -17,7 +17,7 @@ import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { getContactInformationRef } from 'FirebaseConnection';
-import { isAndroid } from 'PlatformWrapper';
+import { isAndroid, isTablet } from 'PlatformWrapper';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import Communications from 'react-native-communications';
 
@@ -181,7 +181,7 @@ class ContactPage extends Component {
   renderMapView() {
     if (isAndroid()) { return; }
     return (<MapView
-              style={{height: 200, marginTop: 20, marginBottom: 40}}
+              style={{height: isTablet() ? 500 : 200, marginTop: 20, marginBottom: 40}}
               region={{
                 latitude: this.state.latitude,
                 longitude: this.state.longitude,

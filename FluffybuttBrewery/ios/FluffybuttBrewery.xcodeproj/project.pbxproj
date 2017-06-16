@@ -37,6 +37,9 @@
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
 		832341BD1AAA6AB300B99B32 /* libRCTText.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 832341B51AAA6A8300B99B32 /* libRCTText.a */; };
 		BF208A861EA6866700A50721 /* libRNMail.a in Frameworks */ = {isa = PBXBuildFile; fileRef = BFF01B0A1EA684CA00760B8F /* libRNMail.a */; };
+		BFD9AF211EF3D7F80017E346 /* RNDeviceConstantsModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD9AF201EF3D7F80017E346 /* RNDeviceConstantsModule.swift */; };
+		BFD9AF231EF3D9DF0017E346 /* RNDeviceConstantsModuleBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = BFD9AF221EF3D9DF0017E346 /* RNDeviceConstantsModuleBridge.m */; };
+		BFD9AF261EF3DA740017E346 /* UIDeviceExtension.swift in Sources */ = {isa = PBXBuildFile; fileRef = BFD9AF251EF3DA740017E346 /* UIDeviceExtension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -270,6 +273,9 @@
 		5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTAnimation.xcodeproj; path = "../node_modules/react-native/Libraries/NativeAnimation/RCTAnimation.xcodeproj"; sourceTree = "<group>"; };
 		78C398B01ACF4ADC00677621 /* RCTLinking.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTLinking.xcodeproj; path = "../node_modules/react-native/Libraries/LinkingIOS/RCTLinking.xcodeproj"; sourceTree = "<group>"; };
 		832341B01AAA6A8300B99B32 /* RCTText.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTText.xcodeproj; path = "../node_modules/react-native/Libraries/Text/RCTText.xcodeproj"; sourceTree = "<group>"; };
+		BFD9AF201EF3D7F80017E346 /* RNDeviceConstantsModule.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = RNDeviceConstantsModule.swift; path = FluffybuttBrewery/RNDeviceConstants/RNDeviceConstantsModule.swift; sourceTree = "<group>"; };
+		BFD9AF221EF3D9DF0017E346 /* RNDeviceConstantsModuleBridge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RNDeviceConstantsModuleBridge.m; path = FluffybuttBrewery/RNDeviceConstants/RNDeviceConstantsModuleBridge.m; sourceTree = "<group>"; };
+		BFD9AF251EF3DA740017E346 /* UIDeviceExtension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UIDeviceExtension.swift; path = FluffybuttBrewery/Extensions/UIDeviceExtension.swift; sourceTree = "<group>"; };
 		BFF01AEB1EA684C900760B8F /* RNMail.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNMail.xcodeproj; path = "../node_modules/react-native-mail/RNMail.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -406,6 +412,8 @@
 		13B07FAE1A68108700A75B9A /* FluffybuttBrewery */ = {
 			isa = PBXGroup;
 			children = (
+				BFD9AF241EF3DA560017E346 /* Extensions */,
+				BFD9AF031EF3D7B40017E346 /* RNDeviceConstants */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
 				13B07FB01A68108700A75B9A /* AppDelegate.m */,
@@ -499,6 +507,23 @@
 				2D02E4901E0B4A5D006451C7 /* FluffybuttBrewery-tvOSTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		BFD9AF031EF3D7B40017E346 /* RNDeviceConstants */ = {
+			isa = PBXGroup;
+			children = (
+				BFD9AF201EF3D7F80017E346 /* RNDeviceConstantsModule.swift */,
+				BFD9AF221EF3D9DF0017E346 /* RNDeviceConstantsModuleBridge.m */,
+			);
+			name = RNDeviceConstants;
+			sourceTree = "<group>";
+		};
+		BFD9AF241EF3DA560017E346 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				BFD9AF251EF3DA740017E346 /* UIDeviceExtension.swift */,
+			);
+			name = Extensions;
 			sourceTree = "<group>";
 		};
 		BFF01AEC1EA684C900760B8F /* Products */ = {
@@ -601,6 +626,7 @@
 					};
 					13B07F861A680F5B00A75B9A = {
 						DevelopmentTeam = Y39538G73S;
+						LastSwiftMigration = 0820;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -954,7 +980,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				BFD9AF261EF3DA740017E346 /* UIDeviceExtension.swift in Sources */,
 				13B07FBC1A68108700A75B9A /* AppDelegate.m in Sources */,
+				BFD9AF211EF3D7F80017E346 /* RNDeviceConstantsModule.swift in Sources */,
+				BFD9AF231EF3D9DF0017E346 /* RNDeviceConstantsModuleBridge.m in Sources */,
 				13B07FC11A68108700A75B9A /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1007,6 +1036,7 @@
 		00E356F61AD99517003FC87E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				DEVELOPMENT_TEAM = Y39538G73S;
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -1028,6 +1058,7 @@
 		00E356F71AD99517003FC87E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = Y39538G73S;
@@ -1047,6 +1078,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = Y39538G73S;
@@ -1059,6 +1091,8 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = se.lindaccnordstrom.FluffybuttBrewery;
 				PRODUCT_NAME = FluffybuttBrewery;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -1068,6 +1102,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Y39538G73S;
 				INFOPLIST_FILE = FluffybuttBrewery/Info.plist;
@@ -1079,6 +1114,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = se.lindaccnordstrom.FluffybuttBrewery;
 				PRODUCT_NAME = FluffybuttBrewery;
+				SWIFT_VERSION = 3.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
