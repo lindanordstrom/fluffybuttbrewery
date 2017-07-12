@@ -11,7 +11,8 @@ import {
   StatusBar,
   ScrollView,
   Modal,
-  MapView
+  MapView,
+  Linking
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
@@ -20,6 +21,7 @@ import { getContactInformationRef } from 'FirebaseConnection';
 import { isAndroid, isTablet } from 'PlatformWrapper';
 import Toast, { DURATION } from 'react-native-easy-toast'
 import Communications from 'react-native-communications';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
@@ -119,7 +121,9 @@ class ContactPage extends Component {
       latitude: 0,
       longitude: 0
     };
+  }
 
+  componentDidMount() {
     getContactInformationRef().once('value')
     .then(snapshot => {
       this.setState({
@@ -132,6 +136,13 @@ class ContactPage extends Component {
         longitude: snapshot.val().Longitude || 0
       });
     });
+  }
+
+  facebookClick () {
+    const link = getLabel('contact.facebookURL')
+    Linking.canOpenURL(link).then(supported => {
+      supported && Linking.openURL(link)
+    }, (err) => Alert.alert(getLabel('support.errorTitle'), err));
   }
 
   renderModalView() {
@@ -180,21 +191,23 @@ class ContactPage extends Component {
 
   renderMapView() {
     if (isAndroid()) { return; }
-    return (<MapView
-              style={{height: isTablet() ? 500 : 200, marginTop: 20, marginBottom: 40}}
-              region={{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-                latitudeDelta: 0.01,
-                longitudeDelta: 0.01,
-              }}
-              annotations={[{
-                latitude: this.state.latitude,
-                longitude: this.state.longitude,
-                title: getLabel('plp.title')
-              }]}
-            />);
-}
+    return (
+      <MapView
+        style={{height: isTablet() ? 500 : 200, marginTop: 20, marginBottom: 40}}
+        region={{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        annotations={[{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          title: getLabel('plp.title')
+        }]}
+      />
+    );
+  }
 
   render() {
     return (
@@ -212,6 +225,14 @@ class ContactPage extends Component {
             onPress={() => Communications.phonecall(this.state.telephone, false)}
             underlayColor={BACKGROUND_COLOR_LIGHT}>
             <Text style={[styles.description, {textDecorationLine: 'underline'}]}>{this.state.telephone}</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{alignSelf: 'center', paddingBottom: 20}}
+            onPress={() => this.facebookClick()}
+            underlayColor={BACKGROUND_COLOR}>
+            <Icon
+              style={{fontSize: 48, color: MAIN_COLOR}}
+              name='facebook-square'
+            />
           </TouchableHighlight>
           <TouchableHighlight style={styles.button}
             onPress={() => this.setModalVisible(true)}

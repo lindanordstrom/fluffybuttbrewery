@@ -11,36 +11,115 @@ import {
   BackAndroid
 } from 'react-native';
 import { getColor, ColorKeys } from 'Colors';
+import { getLabel } from 'Labels';
+import { SideMenu, List, ListItem } from 'react-native-elements'
+import Icon from 'react-native-vector-icons/MaterialIcons'
 
 var SplashPage = require('./SplashPage');
 var ProductListPage = require('./ProductListPage');
 var ProductDetailsPage = require('./ProductDetailsPage');
 var ContactPage = require('./ContactPage');
+var SupportPage = require('./SupportPage');
 
 const NAVIGATION_BAR_BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND);
 const NAVIGATION_BAR_TEXT = getColor(ColorKeys.MAIN)
+const list = [{ name: 'Produkter' },
+              { name: 'Om bryggeriet' },
+              { name: 'Support' }];
+var _navigator = null
 
 class NavigationManager extends Component {
+  constructor () {
+    super()
+    this.state = {
+      isOpen: false
+    }
+  }
+
+  onSideMenuChange (isOpen: boolean) {
+    this.setState({
+      isOpen: isOpen
+    })
+  }
+
+  toggleSideMenu () {
+    this.setState({
+      isOpen: !this.state.isOpen
+    })
+  }
+
   render() {
-    return (
-      <Navigator
-      initialRoute={{id: 'SplashPage'}}
-      renderScene={this.renderScene.bind(this)}
-      configureScene={(route) => {
-        if (route.sceneConfig) {
-          return route.sceneConfig;
+    const MenuComponent = (
+      <View style={{flex: 1, backgroundColor: NAVIGATION_BAR_BACKGROUND_COLOR, paddingTop: 44}}>
+        <List containerStyle={{marginBottom: 20}}>
+        {
+          list.map((l, i) => (
+            <ListItem
+              roundAvatar
+              onPress={() => {
+                switch (i) {
+                  case 0:
+                    _navigator.replace({
+                      id: getLabel('plp.id'),
+                      title: getLabel('plp.title'),
+                    })
+                    break
+                  case 1:
+                    _navigator.replace({
+                      id: 'ContactPage',
+                      title: 'Kontakt'
+                    })
+                    break
+                  case 2:
+                    _navigator.replace({
+                      id: 'SupportPage',
+                      title: 'Support'
+                    })
+                    break
+                }
+                this.toggleSideMenu()
+              }}
+              avatar={l.avatar_url}
+              key={i}
+              title={l.name}
+              subtitle={l.subtitle}
+            />
+          ))
         }
-        return Navigator.SceneConfigs.FloatFromRight;
-      }}
-      navigationBar={
-        <Navigator.NavigationBar style={styles.navigationBar}
-        routeMapper={NavigationBarRouteMapper}
-        navigationStyles={Navigator.NavigationBar.StylesIOS} />
-      }
-      />
+        </List>
+      </View>
+    )
+
+    return (
+      <View style={styles.navigationBar}>
+        <SideMenu
+          isOpen={this.state.isOpen}
+          onChange={this.onSideMenuChange.bind(this)}
+          menu={MenuComponent}>
+          <View style={styles.background}>
+            <Navigator
+              initialRoute={{id: 'SplashPage'}}
+              renderScene={this.renderScene.bind(this)}
+              configureScene={(route) => {
+                if (route.sceneConfig) {
+                  return route.sceneConfig;
+                }
+                return Navigator.SceneConfigs.FloatFromRight;
+              }}
+              navigationBar={
+                <Navigator.NavigationBar style={styles.navigationBar}
+                routeMapper={NavigationBarRouteMapper(this.toggleSideMenu.bind(this))}
+                navigationStyles={Navigator.NavigationBar.StylesIOS} />
+              }
+            />
+          </View>
+        </SideMenu>
+      </View>
     );
   }
+
   renderScene(route, navigator) {
+    _navigator = navigator
     var routeId = route.id;
 
     BackAndroid.addEventListener('hardwareBackPress', () => {
@@ -85,33 +164,54 @@ class NavigationManager extends Component {
       );
     }
 
-    return this.noRoute(navigator);
-
+    if (routeId === 'SupportPage') {
+      return (
+        <SupportPage
+          navigator={navigator} />
+      );
+    }
   }
 }
 
-var NavigationBarRouteMapper = {
+var NavigationBarRouteMapper = toggleSideMenu => ({
   LeftButton(route, navigator, index, navState) {
     var routeId = route.id;
-    if (routeId === 'SplashPage' || routeId === 'ProductListPage') {
+    if (routeId === 'SplashPage') {
       return null;
+    }
+    if (routeId === 'ProductDetailsPage' || routeId === 'BasketPage') {
+      return (
+        <TouchableOpacity style={styles.navigationBarButton}
+            onPress={() => navigator.pop()}>
+            <Icon
+              style={[styles.navigationBarText, {fontSize: 28, marginLeft: 20}]}
+              name='arrow-back'
+            />
+        </TouchableOpacity>
+      );
     }
     return (
       <TouchableOpacity style={styles.navigationBarButton}
-          onPress={() => navigator.pop()}>
-        <Text style={styles.navigationBarText}>{"<"} Tillbaka</Text>
+          onPress={() => {toggleSideMenu()}}>
+          <Icon
+            style={[styles.navigationBarText, {fontSize: 28, marginLeft: 20}]}
+            name='menu'
+          />
       </TouchableOpacity>
-    );
+    )
   },
   RightButton(route, navigator, index, navState) {
     var routeId = route.id;
     if (routeId === 'ProductListPage') {
       return <TouchableOpacity style={styles.navigationBarButton}
                 onPress={() => navigator.push({
-                  id: 'ContactPage',
-                  title: 'Kontakt'
+                  id: 'BasketPage',
+                  title: 'Kundkorg'
                 })}>
-              <Text style={{fontSize: 28, marginRight: 20}}>🏠</Text>
+                <Icon
+                  style={[styles.navigationBarText, {fontSize: 28, marginRight: 20}]}
+                  name='shopping-cart'
+                />
             </TouchableOpacity>;
     }
   },
@@ -120,12 +220,17 @@ var NavigationBarRouteMapper = {
       <Text style={styles.navigationBarText}>{route.title}</Text>
     );
   }
-};
+});
 
 
 var styles = StyleSheet.create({
+  background: {
+    backgroundColor: 'white',
+    flex: 1
+  },
   navigationBar: {
-    backgroundColor: NAVIGATION_BAR_BACKGROUND_COLOR
+    backgroundColor: NAVIGATION_BAR_BACKGROUND_COLOR,
+    flex: 1
   },
   navigationBarButton: {
     flex: 1,

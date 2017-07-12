@@ -14,7 +14,7 @@
      body: body,
    }, (error, event) => {
        if(error) {
-         Alert.alert(getLabel('contact.errorTitle'), getLabel('contact.errorMessage'));
+         Alert.alert(getLabel('support.errorTitle'), getLabel('support.feedbackErrorMessage'));
        }
    });
  }

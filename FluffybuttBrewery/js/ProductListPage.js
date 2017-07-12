@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { getColor, ColorKeys } from 'Colors';
+import { getProductsRef } from 'FirebaseConnection';
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
@@ -71,13 +72,31 @@ class ProductListPage extends Component {
 
   constructor(props) {
     super(props);
-    var dataSource = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.title !== r2.title});
     this.state = {
-      dataSource: dataSource.cloneWithRows(this.props.listings)
+      dataSource: null,
+      listings: null,
+      loaded: false
     };
   }
 
+  componentDidMount() {
+    getProductsRef().once('value')
+    .then(snapshot => {
+      var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.title !== r2.title});
+      const data = snapshot.val()
+      this.setState({
+        dataSource: ds.cloneWithRows(data),
+        listings: data,
+        loaded: true
+      });
+    });
+  }
+
   render() {
+    if (!this.state.loaded) {
+      return <View></View>
+    }
+
     return (
       <View style={styles.backgroundContainer}>
         <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
@@ -113,7 +132,7 @@ class ProductListPage extends Component {
   }
 
   rowPressed(title) {
-    var product = this.props.listings.filter(prop => prop.title === title)[0];
+    var product = this.state.listings.filter(prop => prop.title === title)[0];
 
     this.props.navigator.push({
       id: getLabel('pdp.id'),

@@ -30,10 +30,9 @@ const labels = {
     'contact.placeholderEmail': 'Skriv in din epost-address',
     'contact.send': 'Skicka',
     'contact.close': 'Avbryt',
-    'contact.errorTitle': 'Ett fel inträffade',
-    'contact.errorMessage': 'Vi kunde inte öppna din e-postklient, vänligen skicka din förfrågan till andreas.blyberg@live.se',
     'contact.subject': 'Allmän förfrågan',
     'contact.emailSent': '          Ditt mail har skickats!          ',
+    'contact.facebookURL': 'https://www.facebook.com/fluffybuttbrew/',
 
     // Product Details Page
 
@@ -43,6 +42,19 @@ const labels = {
     'pdp.contact.body': 'Hej, jag är intresserad utav ',
     'pdp.inStock.label': 'I lager ✅',
     'pdp.notInStock.label': 'Ej i lager ❌',
+
+    // Support Page
+    'support.feedbackButtonLabel': 'Ge feedback på appen',
+    'support.feedbackSubject': 'FluffybuttBrewery App Feedback',
+    'support.feedbackRecipient': 'lindanordstrom86@gmail.com',
+    'support.rateButtonLabel': 'Betygsätt appen på ',
+    'support.errorTitle': 'Ett fel inträffade',
+    'support.feedbackErrorMessage': 'Vi kunde inte öppna din e-postklient, vänligen skicka din app feedback till lindanordstrom86@gmail.com',
+    'support.rateErrorMessage': 'Kunde inte öppna länken i ',
+    'support.iosStore': 'AppStore',
+    'support.androidStore': 'Google Play',
+    'support.iosStoreURL': 'itms-apps://itunes.apple.com/app/viewContentsUserReviews?id=',
+    'support.androidStoreURL': 'market://details?id=',
   },
 
   /**
