@@ -101,7 +101,7 @@ class ProductListPage extends Component {
       <View style={styles.backgroundContainer}>
         <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <View style={styles.backgroundContainer}>
-          <Image source={require('../assets/IMG_1671.png')}
+          <Image source={require('../../assets/IMG_1671.png')}
             resizeMode={Image.resizeMode.cover}
             style={styles.image}/>
         </View>

@@ -15,11 +15,12 @@ import { getLabel } from 'Labels';
 import { SideMenu, List, ListItem } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/MaterialIcons'
 
-var SplashPage = require('./SplashPage');
-var ProductListPage = require('./ProductListPage');
-var ProductDetailsPage = require('./ProductDetailsPage');
-var ContactPage = require('./ContactPage');
-var SupportPage = require('./SupportPage');
+var SplashPage = require('./Pages/SplashPage');
+var ProductListPage = require('./Pages/ProductListPage');
+var ProductDetailsPage = require('./Pages/ProductDetailsPage');
+var ContactPage = require('./Pages/ContactPage');
+var SupportPage = require('./Pages/SupportPage');
+var BasketPage = require('./Pages/BasketPage');
 
 const NAVIGATION_BAR_BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND);
 const NAVIGATION_BAR_TEXT = getColor(ColorKeys.MAIN)
@@ -67,7 +68,7 @@ class NavigationManager extends Component {
                   case 1:
                     _navigator.replace({
                       id: 'ContactPage',
-                      title: 'Kontakt'
+                      title: 'Om bryggeriet'
                     })
                     break
                   case 2:
@@ -144,8 +145,7 @@ class NavigationManager extends Component {
     if (routeId === 'ProductListPage') {
       return (
         <ProductListPage
-          navigator={navigator}
-          listings={route.listings} />
+          navigator={navigator} />
       );
     }
 
@@ -167,6 +167,13 @@ class NavigationManager extends Component {
     if (routeId === 'SupportPage') {
       return (
         <SupportPage
+          navigator={navigator} />
+      );
+    }
+
+    if (routeId === 'BasketPage') {
+      return (
+        <BasketPage
           navigator={navigator} />
       );
     }
@@ -202,7 +209,7 @@ var NavigationBarRouteMapper = toggleSideMenu => ({
   },
   RightButton(route, navigator, index, navState) {
     var routeId = route.id;
-    if (routeId === 'ProductListPage') {
+    if (routeId === 'ProductListPage' || routeId === 'ProductDetailsPage') {
       return <TouchableOpacity style={styles.navigationBarButton}
                 onPress={() => navigator.push({
                   id: 'BasketPage',

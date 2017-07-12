@@ -3,84 +3,58 @@
 import React, { Component } from 'react'
 import {
   StyleSheet,
-  Image,
   View,
   TouchableHighlight,
+  TextInput,
   Text,
-  ScrollView,
-  Dimensions,
+  Image,
   StatusBar,
+  ScrollView,
   Modal,
-  TextInput
+  MapView,
+  Linking
 } from 'react-native';
 import { getLabel } from 'Labels';
 import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
-import { isAndroid } from 'PlatformWrapper';
-import Toast, { DURATION } from 'react-native-easy-toast'
 import { getContactInformationRef } from 'FirebaseConnection';
+import { isAndroid, isTablet } from 'PlatformWrapper';
+import Toast, { DURATION } from 'react-native-easy-toast'
+import Communications from 'react-native-communications';
+import Icon from 'react-native-vector-icons/FontAwesome'
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
-const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
 const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
 const BACKGROUND_COLOR_LIGHT = getColor(ColorKeys.BACKGROUND_LIGHT)
 
-const SCREEN_WIDTH = Dimensions.get('window').width;
-
 var styles = StyleSheet.create({
   container: {
-    marginTop: 64
-  },
-  heading: {
-    backgroundColor: BACKGROUND_COLOR,
-    padding: 20,
-    paddingTop: 5,
-    paddingBottom: 5
-  },
-  image: {
-    height: SCREEN_WIDTH / 4 * 3,
-    alignItems: 'center',
-    backgroundColor: 'white'
-  },
-  title: {
-    fontSize: 25,
-    fontWeight: 'bold',
-    color: MAIN_COLOR,
-    width: SCREEN_WIDTH * 0.6 - 20
-  },
-  subtitle: {
-    fontSize: 18,
-    color: SECONDARY_COLOR,
-    width: SCREEN_WIDTH * 0.4 - 20
+    marginTop: 64,
+    paddingLeft: 20,
+    paddingRight: 20,
+    paddingTop: 20
   },
   description: {
     fontSize: 18,
-    margin: 5,
-    marginLeft: 20,
-    marginRight: 20,
-    color: MAIN_COLOR
-  },
-  stockDescription: {
-    fontSize: 14,
-    margin: 5,
-    marginLeft: 20,
-    marginRight: 20,
+    color: MAIN_COLOR,
+    fontWeight: 'bold',
+    paddingBottom: 20
   },
   buttonText: {
     fontSize: 18,
     color: BACKGROUND_COLOR_LIGHT,
-    textAlign: 'center'
+    alignSelf: 'center'
   },
   button: {
+    height: 36,
     backgroundColor: MAIN_COLOR,
     borderColor: MAIN_COLOR,
     borderWidth: 1,
     borderRadius: 8,
-    marginBottom: 50,
-    marginTop: 20,
-    margin: 40,
-    padding: 5,
+    marginBottom: 10,
+    marginTop: 5,
+    margin: 20,
     paddingLeft: 10,
     paddingRight: 10,
     alignSelf: 'stretch',
@@ -89,6 +63,10 @@ var styles = StyleSheet.create({
   background: {
     backgroundColor: BACKGROUND_COLOR_LIGHT,
     flex: 1
+  },
+  image: {
+    height: 200,
+    width: null
   },
   modalContainer: {
     flex: 1,
@@ -114,7 +92,7 @@ var styles = StyleSheet.create({
     paddingRight: 10,
     color: '#568885'
   },
-  contactTitle: {
+  title: {
     fontSize: 25,
     fontWeight: 'bold',
     margin: 5,
@@ -124,41 +102,56 @@ var styles = StyleSheet.create({
   },
 });
 
-class ProductDetailsPage extends Component {
+class ContactPage extends Component {
   setModalVisible(visible) {
     this.setState({modalVisible: visible});
   }
 
-  constructor(props) {
+  constructor() {
     super()
-
-    let product = props.product;
-    let title = product.title
-    let emailSubject = getLabel('pdp.contact.subject') + product.type + " " + title
-    let emailBody = getLabel('pdp.contact.body') + title
-
     this.state = {
+      title: "",
+      address: "",
+      telephone: "",
+      about: "",
       modalVisible: false,
-      product: product,
-      body: emailBody,
+      body: null,
       sender: null,
-      subject: emailSubject,
-      recipient: null
+      recipient: null,
+      latitude: 0,
+      longitude: 0
     };
+  }
 
+  componentDidMount() {
     getContactInformationRef().once('value')
     .then(snapshot => {
       this.setState({
+        title: snapshot.val().Title,
+        address: snapshot.val().Address,
+        telephone: snapshot.val().Telephone,
+        about: snapshot.val().About,
         recipient: snapshot.val().Email,
+        latitude: snapshot.val().Latitude || 0,
+        longitude: snapshot.val().Longitude || 0
       });
     });
   }
 
+  facebookClick () {
+    const link = getLabel('contact.facebookURL')
+    Linking.canOpenURL(link).then(supported => {
+      supported && Linking.openURL(link)
+    }, (err) => Alert.alert(getLabel('support.errorTitle'), err));
+  }
+
   renderModalView() {
+    let emailSubject = getLabel('contact.subject')
+
     return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
                <View style={styles.modalContainer}>
                 <View style={styles.modalInnerContainer}>
-                  <Text style={styles.contactTitle}>{getLabel('contact.button')}</Text>
+                  <Text style={styles.title}>{getLabel('contact.button')}</Text>
                   <TextInput style={[styles.inputField, {height: isAndroid() ? 40 : 30}]}
                     multiline={false}
                     onChangeText={(value) => this.setState({sender: value})}
@@ -176,7 +169,7 @@ class ProductDetailsPage extends Component {
                   <TouchableHighlight style={styles.button}
                     onPress={() => {
                       if (validateEmail(this.state.sender)) {
-                        sendMailWith(this.state.sender, this.state.subject, this.state.recipient, this.state.body)
+                        sendMailWith(this.state.sender, emailSubject, this.state.recipient, this.state.body)
                         this.setState({body: null})
                         this.setModalVisible(false)
                         this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);
@@ -196,34 +189,57 @@ class ProductDetailsPage extends Component {
               </Modal>);
   }
 
+  renderMapView() {
+    if (isAndroid()) { return; }
+    return (
+      <MapView
+        style={{height: isTablet() ? 500 : 200, marginTop: 20, marginBottom: 40}}
+        region={{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
+        }}
+        annotations={[{
+          latitude: this.state.latitude,
+          longitude: this.state.longitude,
+          title: getLabel('plp.title')
+        }]}
+      />
+    );
+  }
+
   render() {
-    const inStockLabel = this.state.product.in_stock ? getLabel('pdp.inStock.label') : getLabel('pdp.notInStock.label')
-    const inStockStyleColor = this.state.product.in_stock ? 'green' : 'red'
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <ScrollView style={styles.container}>
           {this.renderModalView()}
-          <Image style={styles.image}
-              source={{uri: this.state.product.img_url}}
-              resizeMode={Image.resizeMode.contain} />
-          <View style={styles.heading}>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={styles.title}>{this.state.product.title}</Text>
-              <Text style={[styles.subtitle, {textAlign: 'right'}]}>{this.state.product.type}</Text>
-            </View>
-            <View style={{flexDirection: 'row', justifyContent: 'space-between'}}>
-              <Text style={[styles.subtitle, {fontWeight: 'bold'}]}>{this.state.product.price}</Text>
-              <Text style={[styles.subtitle, {textAlign: 'right', width: SCREEN_WIDTH * 0.6 - 20}]}>{this.state.product.alc}</Text>
-            </View>
-          </View>
-          <Text style={[styles.stockDescription, {color: inStockStyleColor}]}>{ inStockLabel }</Text>
-          <Text style={styles.description}>{this.state.product.details}</Text>
+          <Image source={require('../../assets/logo.png')}
+          resizeMode={Image.resizeMode.contain}
+          style={styles.image}/>
+          <Text style={styles.description}>{this.state.title}</Text>
+          <Text style={[styles.description, {fontWeight: 'normal'}]}>{this.state.about}</Text>
+          <Text style={styles.description}>{this.state.address}</Text>
+          <TouchableHighlight
+            onPress={() => Communications.phonecall(this.state.telephone, false)}
+            underlayColor={BACKGROUND_COLOR_LIGHT}>
+            <Text style={[styles.description, {textDecorationLine: 'underline'}]}>{this.state.telephone}</Text>
+          </TouchableHighlight>
+          <TouchableHighlight style={{alignSelf: 'center', paddingBottom: 20}}
+            onPress={() => this.facebookClick()}
+            underlayColor={BACKGROUND_COLOR}>
+            <Icon
+              style={{fontSize: 48, color: MAIN_COLOR}}
+              name='facebook-square'
+            />
+          </TouchableHighlight>
           <TouchableHighlight style={styles.button}
             onPress={() => this.setModalVisible(true)}
             underlayColor={BACKGROUND_COLOR}>
-            <Text style={styles.buttonText}>{getLabel('pdp.contact.button')}</Text>
+            <Text style={styles.buttonText}>{getLabel('contact.button')}</Text>
           </TouchableHighlight>
+          {this.renderMapView()}
         </ScrollView>
         <Toast
         ref="toast"
@@ -237,4 +253,4 @@ class ProductDetailsPage extends Component {
   }
 }
 
-module.exports = ProductDetailsPage;
+module.exports = ContactPage;

@@ -71,6 +71,12 @@ var styles = StyleSheet.create({
 const store = isIOS() ? getLabel('support.iosStore') : getLabel('support.androidStore')
 
 class SupportPage extends Component {
+  readItemsInBasket() {
+    return getItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS)
+      .then(val => val || 0)
+      .catch(() => 0);
+  }
+
   rateAppClick () {
     // 1188836017 - HUEL
     // 1248258940 - FLUFFYBUTT
@@ -97,7 +103,7 @@ class SupportPage extends Component {
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <ScrollView style={styles.container}>
-          <Image source={require('../assets/logo.png')}
+          <Image source={require('../../assets/logo.png')}
           resizeMode={Image.resizeMode.contain}
           style={styles.image}/>
           <Text style={styles.description}>Version {DeviceInfo.getReadableVersion()}</Text>

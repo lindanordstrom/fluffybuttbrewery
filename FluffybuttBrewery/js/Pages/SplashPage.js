@@ -39,7 +39,8 @@ var styles = StyleSheet.create({
 class SplashPage extends Component {
   componentWillMount() {
     setTimeout(() => {
-      getProductsRef().on('value', snapshot => {
+      getProductsRef().once('value')
+      .then(snapshot => {
         this._handleResponse(snapshot.val())
       });
     }, 1000);
@@ -50,7 +51,7 @@ class SplashPage extends Component {
       <View style={styles.container}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <View style={styles.backgroundContainer}>
-          <Image source={require('../assets/IMG_1671.png')}
+          <Image source={require('../../assets/IMG_1671.png')}
             resizeMode={Image.resizeMode.cover}
             style={styles.image}/>
         </View>
@@ -65,8 +66,7 @@ class SplashPage extends Component {
     if (response && response.length > 0) {
       this.props.navigator.replace({
         id: getLabel('plp.id'),
-        title: getLabel('plp.title'),
-        listings: response
+        title: getLabel('plp.title')
       });
     } else {
       this._alertAndReload();
