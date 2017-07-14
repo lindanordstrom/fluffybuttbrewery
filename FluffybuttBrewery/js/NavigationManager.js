@@ -213,7 +213,7 @@ var NavigationBarRouteMapper = toggleSideMenu => ({
       return <TouchableOpacity style={styles.navigationBarButton}
                 onPress={() => navigator.push({
                   id: 'BasketPage',
-                  title: 'Kundkorg'
+                  title: 'Intresselista'
                 })}>
                 <Icon
                   style={[styles.navigationBarText, {fontSize: 28, marginRight: 20}]}

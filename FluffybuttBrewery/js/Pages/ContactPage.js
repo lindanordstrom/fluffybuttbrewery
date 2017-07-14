@@ -12,10 +12,11 @@ import {
   ScrollView,
   Modal,
   MapView,
-  Linking
+  Linking,
+  Alert
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
+import { sendMailWith, validateEmail } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { getContactInformationRef } from 'FirebaseConnection';
 import { isAndroid, isTablet } from 'PlatformWrapper';

@@ -17,7 +17,7 @@ const labels = {
     'launch.errorMessage': 'Vänligen försök igen',
 
     // Validate email
-    'invalidEmail.message': 'Vänligen fyll i en epost-address',
+    'invalidEmail.message': 'Vänligen fyll i en giltig epost-address',
 
     // Product List Page
     'plp.title': 'Fluffybutt Brewery',
@@ -37,11 +37,10 @@ const labels = {
     // Product Details Page
 
     'pdp.id': 'ProductDetailsPage',
-    'pdp.contact.button': 'Kontakta bryggeriet angående denna produkt',
-    'pdp.contact.subject': 'Ang: ',
-    'pdp.contact.body': 'Hej, jag är intresserad utav ',
+    'pdp.basket.button': 'Lägg till i intresselistan',
     'pdp.inStock.label': 'I lager ✅',
     'pdp.notInStock.label': 'Ej i lager ❌',
+    'pdp.basket.added': '          Tillagd i intresselistan!          ',
 
     // Support Page
     'support.feedbackButtonLabel': 'Ge feedback på appen',
@@ -55,6 +54,16 @@ const labels = {
     'support.androidStore': 'Google Play',
     'support.iosStoreURL': 'itms-apps://itunes.apple.com/app/viewContentsUserReviews?id=',
     'support.androidStoreURL': 'market://details?id=',
+
+    // Basket Page
+    'basket.description': 'Fyll i din epost-address nedan och skicka iväg din intresseförfrågan till bryggeriet.',
+    'basket.emptyBasket': 'Lägg till några produkter i din intresselista',
+    'basket.disclaimer': 'Observera att produkterna du valt kanske inte finns i lager eller inte finns i den mängd du angett. \n\nEn intresseförfrågan är inte bindande och ingen betalning kommer göras förens båda parter kommit överens via mail. \n\nFörsälning av alkoholhaltiga drycker kan ej göras mot privatpersoner, men alla är välkommna att skicka frågor kring produkterna och var de eventuellt finns till försälning.',
+    'basket.button': 'Skicka intresseförfrågan',
+    'basket.sendConfirmationTitle': 'Skicka intresseförfrågan?',
+    'basket.sendConfirmationMessage': 'Är du säker på att du vill skicka denna intresseförfrågan till bryggeriet?',
+    'basket.subject': 'Intresseförfrågan',
+    'basket.bodyIntro': 'Hej. Jag är intresserad av följande produkter:\n\n',
   },
 
   /**

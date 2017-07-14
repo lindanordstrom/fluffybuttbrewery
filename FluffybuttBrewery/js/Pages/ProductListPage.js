@@ -74,7 +74,7 @@ class ProductListPage extends Component {
     super(props);
     this.state = {
       dataSource: null,
-      listings: null,
+      products: null,
       loaded: false
     };
   }
@@ -86,7 +86,7 @@ class ProductListPage extends Component {
       const data = snapshot.val()
       this.setState({
         dataSource: ds.cloneWithRows(data),
-        listings: data,
+        products: data,
         loaded: true
       });
     });
@@ -132,7 +132,7 @@ class ProductListPage extends Component {
   }
 
   rowPressed(title) {
-    var product = this.state.listings.filter(prop => prop.title === title)[0];
+    var product = this.state.products.filter(prop => prop.title === title)[0];
 
     this.props.navigator.push({
       id: getLabel('pdp.id'),

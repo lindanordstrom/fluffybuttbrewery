@@ -14,7 +14,7 @@ import {
   TextInput
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
+import { sendMailWith, validateEmail } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import { isAndroid } from 'PlatformWrapper';
 import Toast, { DURATION } from 'react-native-easy-toast'
@@ -127,33 +127,11 @@ var styles = StyleSheet.create({
 });
 
 class ProductDetailsPage extends Component {
-  setModalVisible(visible) {
-    this.setState({modalVisible: visible});
-  }
-
   constructor(props) {
     super()
-
-    let product = props.product;
-    let title = product.title
-    let emailSubject = getLabel('pdp.contact.subject') + product.type + " " + title
-    let emailBody = getLabel('pdp.contact.body') + title
-
     this.state = {
-      modalVisible: false,
-      product: product,
-      body: emailBody,
-      sender: null,
-      subject: emailSubject,
-      recipient: null
+      product: props.product,
     };
-
-    getContactInformationRef().once('value')
-    .then(snapshot => {
-      this.setState({
-        recipient: snapshot.val().Email,
-      });
-    });
   }
 
   saveToBasket(item, count) {
@@ -172,60 +150,19 @@ class ProductDetailsPage extends Component {
           item.count = count
           items.push(item)
         }
+        this.refs.toast.show(getLabel('pdp.basket.added'), DURATION.LENGTH_LONG);
         return setItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS, items);
       })
-  }
-
-  renderModalView() {
-    return (<Modal animationType={"fade"} transparent={true} visible={this.state.modalVisible} onRequestClose={() => this.setModalVisible(false)}>
-               <View style={styles.modalContainer}>
-                <View style={styles.modalInnerContainer}>
-                  <Text style={styles.contactTitle}>{getLabel('contact.button')}</Text>
-                  <TextInput style={[styles.inputField, {height: isAndroid() ? 40 : 30}]}
-                    multiline={false}
-                    onChangeText={(value) => this.setState({sender: value})}
-                    value={this.state.sender}
-                    returnKeyType="next"
-                    onSubmitEditing={() => this.refs["body"].focus()}
-                    placeholder={getLabel('contact.placeholderEmail')}/>
-                  <TextInput style={[styles.inputField, {height: 200}]}
-                    ref="body"
-                    multiline={true}
-                    onChangeText={(value) => this.setState({body: value})}
-                    value={this.state.body}
-                    placeholder={getLabel('contact.placeholder')}/>
-                  <View style={{flexDirection: 'row'}}>
-                  <TouchableHighlight style={styles.button}
-                    onPress={() => {
-                      if (validateEmail(this.state.sender)) {
-                        sendMailWith(this.state.sender, this.state.subject, this.state.recipient, this.state.body)
-                        this.setState({body: null})
-                        this.setModalVisible(false)
-                        this.refs.toast.show(getLabel('contact.emailSent'), DURATION.LENGTH_LONG);
-                      }
-                    }}
-                    underlayColor={BACKGROUND_COLOR}>
-                    <Text style={styles.buttonText}>{getLabel('contact.send')}</Text>
-                  </TouchableHighlight>
-                  <TouchableHighlight style={styles.button}
-                    onPress={() => this.setModalVisible(false)}
-                    underlayColor={BACKGROUND_COLOR}>
-                    <Text style={styles.buttonText}>{getLabel('contact.close')}</Text>
-                  </TouchableHighlight>
-                  </View>
-                </View>
-               </View>
-              </Modal>);
   }
 
   render() {
     const inStockLabel = this.state.product.in_stock ? getLabel('pdp.inStock.label') : getLabel('pdp.notInStock.label')
     const inStockStyleColor = this.state.product.in_stock ? 'green' : 'red'
+
     return (
       <View style={styles.background}>
       <StatusBar backgroundColor={BACKGROUND_COLOR} barStyle="light-content" />
         <ScrollView style={styles.container}>
-          {this.renderModalView()}
           <Image style={styles.image}
               source={{uri: this.state.product.img_url}}
               resizeMode={Image.resizeMode.contain} />
@@ -241,18 +178,11 @@ class ProductDetailsPage extends Component {
           </View>
           <Text style={[styles.stockDescription, {color: inStockStyleColor}]}>{ inStockLabel }</Text>
           <Text style={styles.description}>{this.state.product.details}</Text>
-          <View style={{flexDirection: 'row'}}>
           <TouchableHighlight style={styles.button}
             onPress={() => this.saveToBasket(this.state.product, 1)}
             underlayColor={BACKGROUND_COLOR}>
-            <Text style={styles.buttonText}>+1</Text>
+            <Text style={styles.buttonText}>{getLabel('pdp.basket.button')}</Text>
           </TouchableHighlight>
-          <TouchableHighlight style={styles.button}
-            onPress={() => this.saveToBasket(this.state.product, 10)}
-            underlayColor={BACKGROUND_COLOR}>
-            <Text style={styles.buttonText}>+10</Text>
-          </TouchableHighlight>
-          </View>
         </ScrollView>
         <Toast
         ref="toast"

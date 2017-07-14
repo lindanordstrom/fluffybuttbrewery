@@ -13,7 +13,6 @@ import {
   Alert
 } from 'react-native';
 import { getLabel } from 'Labels';
-import { sendMailWith, validateEmail, formatBodyWithSender } from 'MailHelper'
 import { getColor, ColorKeys } from 'Colors';
 import DeviceInfo from 'react-native-device-info';
 import { launchMailAppWith } from 'MailHelper'
