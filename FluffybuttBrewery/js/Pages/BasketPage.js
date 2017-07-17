@@ -15,12 +15,13 @@ import {
 } from 'react-native';
 import { getColor, ColorKeys } from 'Colors';
 import AsyncStoreConstants from 'AsyncStorageWrapperConstants';
-import { getItem, removeItem } from 'AsyncStorageWrapper';
+import { setItem, getItem, removeItem } from 'AsyncStorageWrapper';
 import { getLabel } from 'Labels';
 import { isAndroid } from 'PlatformWrapper';
 import { sendMailWith, validateEmail } from 'MailHelper'
 import { getContactInformationRef } from 'FirebaseConnection';
 import Toast, { DURATION } from 'react-native-easy-toast'
+import Icon from 'react-native-vector-icons/Entypo'
 
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const SECONDARY_COLOR = getColor(ColorKeys.SECOND)
@@ -57,13 +58,10 @@ var styles = StyleSheet.create({
     backgroundColor: BACKGROUND_COLOR
   },
   title: {
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
-    color: MAIN_COLOR
-  },
-  subtitle: {
-    fontSize: 16,
-    color: SECONDARY_COLOR
+    color: MAIN_COLOR,
+    width: 190
   },
   rowContainer: {
     flexDirection: 'row',
@@ -132,12 +130,20 @@ class BasketPage extends Component {
   readItemsInBasket() {
     return getItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS)
       .then(items => {
-        if (items) {
+        if (items && items.length > 0) {
+          console.log("lindatest 1");
           var ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1.title !== r2.title});
           this.setState({
             dataSource: ds.cloneWithRows(items),
             products: items,
             loaded: true
+          });
+        } else {
+          console.log("lindatest 2");
+          this.setState({
+            dataSource: null,
+            products: null,
+            loaded: false
           });
         }
       })
@@ -158,15 +164,46 @@ class BasketPage extends Component {
     return body
   }
 
+  updateBasket(item, count) {
+    return getItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS)
+      .then(items => {
+        items = items || []
+        for (var i = 0; i < items.length; i++) {
+            if (items[i].title === item.title) {
+                if(items[i].count <= 1 && count < 0) {
+                  Alert.alert(
+                    null,
+                    getLabel('basket.removeItemMessage'),
+                    [
+                      {text: getLabel('basket.removeItemConfirmButton'), onPress: () => {
+                        items.splice(i, 1)
+                        setItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS, items)
+                          .then( items => { this.readItemsInBasket() })
+                      }},
+                      {text: getLabel('basket.removeItemCancelButton'), style: 'cancel'}
+                    ]
+                  )
+                } else {
+                  items[i].count += count
+                }
+                break
+            }
+        }
+        return setItem(AsyncStoreConstants.STORAGE_KEY.BASKET_ITEMS, items)
+          .then( items => { this.readItemsInBasket() })
+      })
+  }
+
   renderContent() {
     if (!this.state.loaded || !this.state.products) {
+      console.log("lindatest 3");
       return (
         <ScrollView style={styles.container}>
           <Text style={styles.description}>{getLabel('basket.emptyBasket')}</Text>
         </ScrollView>
       )
     }
-
+    console.log("lindatest 4");
     return (
       <ScrollView style={styles.container}>
         <Text style={styles.description}>{getLabel('basket.description')}</Text>
@@ -245,9 +282,33 @@ class BasketPage extends Component {
         <View style={styles.separator}/>
         <View style={styles.rowContainer}>
           <Image style={styles.thumb} source={{ uri: rowData.img_url }} resizeMode={Image.resizeMode.cover} />
-          <View  style={styles.textContainer}>
-            <Text style={styles.title}>{rowData.title}</Text>
-            <Text style={styles.subtitle} numberOfLines={1}>{rowData.count}st</Text>
+          <View style={styles.textContainer}>
+          <View  style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
+            <Text style={styles.title} numberOfLines={1}>{rowData.title}</Text>
+            <View style={{flexDirection: 'row'}}>
+              <TouchableHighlight
+                onPress={() => {
+                  this.updateBasket(rowData, -1)
+                }}
+                underlayColor={BACKGROUND_COLOR}>
+                <Icon
+                  style={{fontSize: 20, color: MAIN_COLOR}}
+                  name='squared-minus'
+                />
+              </TouchableHighlight>
+              <Text style={[styles.title, {width: 40, textAlign: 'center', marginTop: -1}]}>{rowData.count}</Text>
+              <TouchableHighlight
+                onPress={() => {
+                  this.updateBasket(rowData, 1)
+                }}
+                underlayColor={BACKGROUND_COLOR}>
+                <Icon
+                  style={{fontSize: 20, color: MAIN_COLOR}}
+                  name='squared-plus'
+                />
+              </TouchableHighlight>
+            </View>
+          </View>
           </View>
         </View>
         <View style={styles.separator}/>

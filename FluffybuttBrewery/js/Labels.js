@@ -64,6 +64,9 @@ const labels = {
     'basket.sendConfirmationMessage': 'Är du säker på att du vill skicka denna intresseförfrågan till bryggeriet?',
     'basket.subject': 'Intresseförfrågan',
     'basket.bodyIntro': 'Hej. Jag är intresserad av följande produkter:\n\n',
+    'basket.removeItemMessage': 'Vill du ta bort produkten från intresselistan?',
+    'basket.removeItemConfirmButton': 'Ta bort',
+    'basket.removeItemCancelButton': 'Avbryt',
   },
 
   /**
