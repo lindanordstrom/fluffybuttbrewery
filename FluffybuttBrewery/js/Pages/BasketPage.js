@@ -60,8 +60,7 @@ var styles = StyleSheet.create({
   title: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: MAIN_COLOR,
-    width: 190
+    color: MAIN_COLOR
   },
   rowContainer: {
     flexDirection: 'row',
@@ -284,8 +283,8 @@ class BasketPage extends Component {
           <Image style={styles.thumb} source={{ uri: rowData.img_url }} resizeMode={Image.resizeMode.cover} />
           <View style={styles.textContainer}>
           <View  style={{flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10}}>
-            <Text style={styles.title} numberOfLines={1}>{rowData.title}</Text>
-            <View style={{flexDirection: 'row'}}>
+            <Text style={[styles.title, {paddingRight: 10, flex: 2}]} numberOfLines={1}>{rowData.title}</Text>
+            <View style={{flexDirection: 'row', flex: 1}}>
               <TouchableHighlight
                 onPress={() => {
                   this.updateBasket(rowData, -1)
@@ -296,7 +295,7 @@ class BasketPage extends Component {
                   name='squared-minus'
                 />
               </TouchableHighlight>
-              <Text style={[styles.title, {width: 40, textAlign: 'center', marginTop: -1}]}>{rowData.count}</Text>
+              <Text style={[styles.title, {width: 35, textAlign: 'center', marginTop: -1}]} numberOfLines={1}>{rowData.count}</Text>
               <TouchableHighlight
                 onPress={() => {
                   this.updateBasket(rowData, 1)

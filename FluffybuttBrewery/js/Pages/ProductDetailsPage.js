@@ -46,7 +46,7 @@ var styles = StyleSheet.create({
     backgroundColor: 'white'
   },
   title: {
-    fontSize: 25,
+    fontSize: 20,
     fontWeight: 'bold',
     color: MAIN_COLOR,
     width: SCREEN_WIDTH * 0.6 - 20

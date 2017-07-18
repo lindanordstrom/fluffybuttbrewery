@@ -19,7 +19,6 @@ import { launchMailAppWith } from 'MailHelper'
 import { isIOS } from 'PlatformWrapper';
 import Icon from 'react-native-vector-icons/FontAwesome'
 
-
 const MAIN_COLOR = getColor(ColorKeys.MAIN)
 const THIRD_COLOR = getColor(ColorKeys.THIRD)
 const BACKGROUND_COLOR = getColor(ColorKeys.BACKGROUND)
@@ -41,10 +40,9 @@ var styles = StyleSheet.create({
   buttonText: {
     fontSize: 18,
     color: BACKGROUND_COLOR_LIGHT,
-    alignSelf: 'center'
+    textAlign: 'center'
   },
   button: {
-    height: 36,
     backgroundColor: MAIN_COLOR,
     borderColor: MAIN_COLOR,
     borderWidth: 1,
@@ -52,8 +50,7 @@ var styles = StyleSheet.create({
     marginBottom: 10,
     marginTop: 5,
     margin: 20,
-    paddingLeft: 10,
-    paddingRight: 10,
+    padding: 2,
     alignSelf: 'stretch',
     justifyContent: 'center'
   },
@@ -77,8 +74,6 @@ class SupportPage extends Component {
   }
 
   rateAppClick () {
-    // 1188836017 - HUEL
-    // 1248258940 - FLUFFYBUTT
     const appID = isIOS() ? '1248258940' : 'com.fluffybuttbrewery'
     const link = isIOS() ? getLabel('support.iosStoreURL') : getLabel('support.androidStoreURL')
     Linking.canOpenURL(link + appID).then(supported => {
